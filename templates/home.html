@@ -11,12 +11,47 @@
     <title>MLV</title>
   </head>
   <body>
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-dark bg-dark navbar-fixed-top">
   <a class="navbar-brand" href="#">Machine Learning Visualization</a>
 </nav>
-    <button class="btn btn-primary" type="submit">Upload Code</button>
-    <button class="btn btn-primary" type="submit">Upload Data .cvs</button>
-    <button class="btn btn-primary" type="submit">START</button>
+<!-- html hat eine Eingebaute upload funktion. Die sieht aber hässlich aus.
+Das ganze besteht aus der form method... und den beiden inputs "file" und "submit", wobei file den filebrowser öffnet
+und submit den upload vollendet. Mit hidden="hidden" verstecken wir den Kram einfach. Die 3 Buttons hatten wir ja schon. Unten wird im Skript Teil dann mit einem EventListener
+bei einem Klick auf unsere Buttons ein Klick auf den tatsächlichen Button simuliert. Jeweil für CSV und Code. Wenn eine Datei
+im Filebrowser ausgewählt wurde, ändert sich der "value" von dem tatsächlichen Button. Dadurch weiß man, dass man jetzt die Datei
+durch einen simulierten Klick auf den Submit button in den uploads Ordner schicken kann, was in app.py geschieht-->
+
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="real-file" hidden="hidden"/>
+        <input type="submit" id="sub-file" hidden="hidden"/>
+
+        <button type="button" class="btn btn-primary" id="custom-csvbtn">Upload CSV</button>
+        <button type="button" class="btn btn-primary" id="custom-codebtn">Upload Code</button>
+        <button type="button" class="btn btn-primary" id="custom-runbtn">Run</button>
+    </form>
+
+    <script type="text/javascript">
+        const realBtn = document.getElementById("real-file");
+        const customCSVBtn = document.getElementById("custom-csvbtn");
+        const customCodeBtn = document.getElementById("custom-codebtn");
+
+        const realSubBtn = document.getElementById("sub-file");
+
+        customCSVBtn.addEventListener("click", function(){
+            realBtn.click();
+        });
+
+        customCodeBtn.addEventListener("click", function(){
+            realBtn.click();
+        });
+
+
+        realBtn.addEventListener("change", function () {
+            if(realBtn.value){
+                realSubBtn.click()
+            }
+        });
+    </script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
