@@ -1,11 +1,17 @@
-from flask import Flask,render_template
+import os
+
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def hello_world():
-    return render_template('home.html', title='Home')
+    if request.method == "POST":
+        file = request.files["file"]
+        file.save(os.path.join("uploads", file.filename))
+        return render_template("home.html")
+    return render_template('home.html')
 
 
 if __name__ == '__main__':
