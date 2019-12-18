@@ -1,4 +1,50 @@
-.section {
-  text-align:center;
+#Landing\ Page{
+  text-align: center;
+  font-size:3em;
+
+}
+
+#Titel{
+  padding-top: 100px;
+}
+#Button_Landing_Page{
+  padding-top: 250px ;
+}
+
+#Upload\ Data {
+  text-align: center;
   font-size: 3em;
 }
+
+#Upload\ Code{
+  text-align: center;
+}
+#start_training{
+  font-size:3em;
+}
+
+#Training\ Data{
+  font-size:3em;
+  text-align: center;
+}
+
+#Display\ Results{
+  text-align: center;
+  font-size:3em;
+}
+#Upload\ Code{
+  padding-top: 100px;
+}
+#Training_Button{
+  font-size:3em;
+  text-align: center;
+  padding-top: 100px;
+}
+
+#code{
+  font-size:3em;
+}
+
+
+
+

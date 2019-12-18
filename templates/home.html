@@ -1,20 +1,26 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.0.8/fullpage.min.css" integrity="sha256-+dIh4jG2jQTHZwW81yUo8h6tzXWcNumyNL5XPZbwp1E=" crossorigin="anonymous" />
-      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.0.8/fullpage.min.css"
+          integrity="sha256-+dIh4jG2jQTHZwW81yUo8h6tzXWcNumyNL5XPZbwp1E=" crossorigin="anonymous"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/css/mdb.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
     <title>MLV</title>
-  </head>
-  <body>
-     <nav id="header" class="navbar navbar-dark bg-dark" style="z-index: 9">
-  <a class="navbar-brand" href="#">Machine Learning Visualization</a>
-</nav>
+</head>
+<body>
 <!-- html hat eine Eingebaute upload funktion. Die sieht aber hässlich aus.
 Das ganze besteht aus der form method... und den beiden inputs "file" und "submit", wobei file den filebrowser öffnet
 und submit den upload vollendet. Mit hidden="hidden" verstecken wir den Kram einfach. Die 3 Buttons hatten wir ja schon. Unten wird im Skript Teil dann mit einem EventListener
@@ -22,68 +28,147 @@ bei einem Klick auf unsere Buttons ein Klick auf den tatsächlichen Button simul
 im Filebrowser ausgewählt wurde, ändert sich der "value" von dem tatsächlichen Button. Dadurch weiß man, dass man jetzt die Datei
 durch einen simulierten Klick auf den Submit button in den uploads Ordner schicken kann, was in app.py geschieht-->
 
-    <div id="fullPage">
-        <div class="section">
-            <form method="post" enctype="multipart/form-data">
-                <input type="file" name="file" id="real-file" hidden="hidden"/>
-                <input type="submit" id="sub-file" hidden="hidden"/>
-
-                <button type="button" class="btn btn-primary" id="custom-csvbtn">Upload CSV</button>
-                <button type="button" class="btn btn-primary" id="custom-codebtn">Upload Code</button>
-            </form>
-            </form>
-                <p>Start Training</p>
-                <a href="#section2"><img src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
-        </div>
-        <div class="section">
-                Train...
-            <p> Show Results</p>
-            <a href="#section3"><img src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
-        </div>
-        <div class="section">
-                Results
+{% block content %}
+<div id="fullPage">
+    <div class="section" id="Landing Page">
+        <div class="container">
+            <div class="row" id="Titel">
+                <div class="col-sm-12">
+                    <p>Machine Learning Visualization</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12"></div>
+            </div>
+            <div class="row" id="Button_Landing_Page">
+                <div class="col-sm-12">
+                    <p>Start Process</p>
+                    <a href="#section2"><img class="Button"
+                                             src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="section" id="Upload Data">
+<!-- MESSAGE SEC-->
+            <div class="=container">
+            {% with errors = get_flashed_messages(category_filter=["csvsuc","errorfileformat"])  %}
+                {% if errors %}
+                {% for message in errors %}
+                    <div class="alert alert-warning">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {% endif %}
+            {% endwith %}
+            </div>
+
+        <p>Upload our data</p>
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="real-file" hidden="hidden"/>
+            <input type="submit" id="sub-file" hidden="hidden"/>
+            <button type="button" class="btn btn-primary" id="custom-csvbtn">Upload CSV</button>
+        </form>
+        <a href="#section3"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"
+                                 hidden="hidden"></a>
+    </div>
+
+    <div class="section" id="Upload Code">
+        <!-- MESSAGE SEC-->
+            <div class="=container">
+            {% with errors = get_flashed_messages(category_filter=["pysuc","errorfileformat"])  %}
+                {% if errors %}
+                {% for message in errors %}
+                    <div class="alert alert-warning">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {% endif %}
+            {% endwith %}
+            </div>
+        <p id="code">Upload Code</p>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="customSwitches">
+            <label class="custom-control-label" for="customSwitches">manual on/off</label>
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file" id="real-file" hidden="hidden"/>
+            <input type="submit" id="sub-file" hidden="hidden"/>
+            <button type="button" class="btn btn-primary" id="custom-codebtn">Upload Code</button>
+        </form>
+        <div id="Training_Button">
+            <p hidden="hidden">Start Training</p>
+            <a href="#section4"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"
+                                     hidden="hidden"></a>
+        </div>
+    </div>
+    <div class="section" id="Training Data">
+        <p>Train </p>
+        <p>progess bar</p>
+        <p>time</p>
+        <a href="#section5"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
+    </div>
+    <div class="section" id="Display Results">
+        <p>Show Results</p>
+    </div>
+</div>
 
 
+<script type="text/javascript">
+    const realBtn = document.getElementById("real-file");
+    const customCSVBtn = document.getElementById("custom-csvbtn");
+    const customCodeBtn = document.getElementById("custom-codebtn");
 
-    <script type="text/javascript">
-        const realBtn = document.getElementById("real-file");
-        const customCSVBtn = document.getElementById("custom-csvbtn");
-        const customCodeBtn = document.getElementById("custom-codebtn");
+    const realSubBtn = document.getElementById("sub-file");
 
-        const realSubBtn = document.getElementById("sub-file");
+    customCSVBtn.addEventListener("click", function () {
+        realBtn.click();
+    });
 
-        customCSVBtn.addEventListener("click", function(){
-            realBtn.click();
-        });
-
-        customCodeBtn.addEventListener("click", function(){
-            realBtn.click();
-        });
+    customCodeBtn.addEventListener("click", function () {
+        realBtn.click();
+    });
 
 
-        realBtn.addEventListener("change", function () {
-            if(realBtn.value){
-                realSubBtn.click()
-            }
-        });
-    </script>
+    realBtn.addEventListener("change", function () {
+        if (realBtn.value) {
+            realSubBtn.click()
+        }
+    });
+</script>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.0.8/fullpage.js"
-            integrity="sha256-wypDCQw+qwWtdARZAAtUMv/1SWOEB1XHZwAFoNc9Wn8=" crossorigin="anonymous"></script>
-    <script>
-        new fullpage('#fullPage', {
-            autoScrolling: true,
-            anchors: ['section1', 'section2', 'section3'],
-        })
-    </script>
-  </body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.0.8/fullpage.js"
+        integrity="sha256-wypDCQw+qwWtdARZAAtUMv/1SWOEB1XHZwAFoNc9Wn8=" crossorigin="anonymous"></script>
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/js/mdb.min.js"></script>
+<script>
+    new fullpage('#fullPage', {
+        autoScrolling: true,
+        anchors: ['section1', 'section2', 'section3', 'section4', 'section5'],
+        verticalCentered: true
+    })
+    fullpage_api.setAllowScrolling(false);
+</script>
+{% endblock %}
+</body>
 </html>
