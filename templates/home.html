@@ -290,6 +290,7 @@ Vue.component('card', {
             }
         }
     },
+    delimiters: ['${', '}'],
     template: '<div>' +
         '<div class="card-deck">' +
         ' <b-card ' +
@@ -299,7 +300,7 @@ Vue.component('card', {
         ' header-text-variant="white"' +
         ' align="center">' +
 
-        ' <b-card-text >{{ data.CSVSIZE }} </b-card-text>' +
+        ' <b-card-text >${ data.CSVSIZE } </b-card-text>' +
         '</b-card>' +
         ' <b-card ' +
         ' border-variant="primary"' +
@@ -308,7 +309,7 @@ Vue.component('card', {
         ' header-text-variant="white"' +
         ' align="center">' +
 
-        ' <b-card-text> {{ data.COLUMN }} </b-card-text>' +
+        ' <b-card-text> ${ data.COLUMN } </b-card-text>' +
         '</b-card>' +
         ' <b-card ' +
         ' border-variant="primary"' +
@@ -317,7 +318,7 @@ Vue.component('card', {
         ' header-text-variant="white"' +
         ' align="center">' +
 
-        ' <b-card-text>{{ data.NAME }}</b-card-text>' +
+        ' <b-card-text>${ data.NAME }</b-card-text>' +
         '</b-card>' +
         ' <b-card ' +
         ' border-variant="primary"' +
@@ -326,14 +327,15 @@ Vue.component('card', {
         ' header-text-variant="white"' +
         ' align="center">' +
 
-        ' <b-card-text>{{ data.TIME }}</b-card-text>' +
+        ' <b-card-text>${ data.TIME }</b-card-text>' +
         '</b-card>' +
         '</div >' +
         '</div>'
 
 });
 new Vue({
-    el: '#app'
+    el: '#app',
+    delimiters: ["${", "}"]
 })
     </script>
     <script>

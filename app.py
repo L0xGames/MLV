@@ -3,15 +3,7 @@ import os
 from flask import Flask, render_template, request, flash
 import pandas as pd
 
-class CustomFlask(Flask):
-    jinja_options = Flask.jinja_options.copy()
-    jinja_options.update(dict(
-        variable_start_string='%%',  # Default is '{{', I'm changing this because Vue.js uses '{{' / '}}'
-        variable_end_string='%%',
-    ))
-
-
-app = CustomFlask(__name__)
+app = Flask(__name__)
 # TODO new secret key
 app.secret_key = 'super secret key'
 dataframe = None
