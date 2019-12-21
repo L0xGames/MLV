@@ -8,16 +8,19 @@
   padding-top: 100px;
 }
 #Button_Landing_Page{
-  padding-top: 250px ;
+  padding-top: 250px;
+
 }
 
 #Upload\ Data {
   text-align: center;
   font-size: 3em;
+  padding-top: 250px;
 }
 
 #Upload\ Code{
   text-align: center;
+  padding-top: 250px;
 }
 #start_training{
   font-size:3em;
@@ -26,19 +29,21 @@
 #Training\ Data{
   font-size:3em;
   text-align: center;
+  padding-top: 225px;
 }
 
 #Display\ Results{
   text-align: center;
   font-size:3em;
+  padding-top: 300px;
 }
 #Upload\ Code{
-  padding-top: 100px;
+
 }
 #Training_Button{
   font-size:3em;
   text-align: center;
-  padding-top: 100px;
+
 }
 
 #code{
@@ -46,5 +51,9 @@
 }
 
 
+#button{
+    margin-left: auto;
+  margin-right: auto;
+}
 
 
