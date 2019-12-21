@@ -16,8 +16,27 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <!-- Material Design Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/css/mdb.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.js"></script>
+    <script src="http://unpkg.com/vue/dist/vue.js"></script>
+    <script src="http://unpkg.com/portal-vue"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
 
+
+    <!-- Load polyfills to support older browsers -->
+
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
     <title>MLV</title>
 </head>
 <body>
@@ -29,146 +48,305 @@ im Filebrowser ausgewählt wurde, ändert sich der "value" von dem tatsächliche
 durch einen simulierten Klick auf den Submit button in den uploads Ordner schicken kann, was in app.py geschieht-->
 
 {% block content %}
-<div id="fullPage">
-    <div class="section" id="Landing Page">
-        <div class="container">
-            <div class="row" id="Titel">
-                <div class="col-sm-12">
-                    <p>Machine Learning Visualization</p>
+    <div id="fullPage">
+        <div class="section" id="Landing Page">
+            <div id="Titel">Machine Learning Visualization</div>
+            <div id="Button_Landing_Page">
+                <p>Start Process</p>
+                <a href="#section2"><img class="Button"
+                                         src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
+            </div>
+        </div>
+        <div class="section">
+            <!-- MESSAGE SEC-->
+            <div class="=container">
+                {% with errors = get_flashed_messages(category_filter=["csvsuc","errorfileformat"]) %}
+                    {% if errors %}
+                        {% for message in errors %}
+                            <div class="alert alert-warning">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div id="Upload Data">
+                <p id="test">Upload our data</p>
+                <form method="post" enctype="multipart/form-data">
+                    <input type="file" name="file" id="real-file" hidden="hidden"/>
+                    <input type="submit" id="sub-file" hidden="hidden"/>
+                    <button type="button" class="btn btn-primary" id="custom-csvbtn">Upload CSV</button>
+                </form>
+                <p>Look at your Data</p>
+                <a href="#section3"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"
+                ></a>
+            </div>
+        </div>
+        <div class="section">
+            <div id="info">
+            <div id="app">
+                <app-user id="table"></app-user>
+                <card id="info"></card>
+            </div>
+            </div>
+        <div id="button">
+            <a href="#section4"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png" id="Table_Button"></a>
+       </div>
+        </div>
+        <div class="section">
+            <!-- MESSAGE SEC-->
+            <div class="=container">
+                {% with errors = get_flashed_messages(category_filter=["pysuc","errorfileformat"]) %}
+                    {% if errors %}
+                        {% for message in errors %}
+                            <div class="alert alert-warning">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div id="Upload Code">
+                <p id="code">Upload Code</p>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="customSwitches">
+                    <label class="custom-control-label" for="customSwitches">manual on/off</label>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    <input type="file" name="file" id="real-file" hidden="hidden"/>
+                    <input type="submit" id="sub-file" hidden="hidden"/>
+                    <button type="button" class="btn btn-primary" id="custom-codebtn">Upload Code</button>
+                </form>
+                <div id="Training_Button">
+                    <p hidden="hidden">Start Training</p>
+                    <a href="#section5"><img class="Button"
+                                             src="https://img.icons8.com/color/48/000000/expand-arrow.png"
+                                             hidden="hidden"></a>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-12"></div>
-            </div>
-            <div class="row" id="Button_Landing_Page">
-                <div class="col-sm-12">
-                    <p>Start Process</p>
-                    <a href="#section2"><img class="Button"
-                                             src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
-                </div>
-            </div>
+        </div>
+        <div class="section" id="Training Data">
+            <p>Train </p>
+            <p>time</p>
+            <a href="#section6"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
+        </div>
+        <div class="section" id="Display Results">
+            <p>Show Results</p>
         </div>
     </div>
-    <div class="section" id="Upload Data">
-<!-- MESSAGE SEC-->
-            <div class="=container">
-            {% with errors = get_flashed_messages(category_filter=["csvsuc","errorfileformat"])  %}
-                {% if errors %}
-                {% for message in errors %}
-                    <div class="alert alert-warning">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                {% endif %}
-            {% endwith %}
-            </div>
-
-        <p>Upload our data</p>
-        <form method="post" enctype="multipart/form-data">
-            <input type="file" name="file" id="real-file" hidden="hidden"/>
-            <input type="submit" id="sub-file" hidden="hidden"/>
-            <button type="button" class="btn btn-primary" id="custom-csvbtn">Upload CSV</button>
-        </form>
-        <a href="#section3"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"
-                                 hidden="hidden"></a>
-    </div>
-
-    <div class="section" id="Upload Code">
-        <!-- MESSAGE SEC-->
-            <div class="=container">
-            {% with errors = get_flashed_messages(category_filter=["pysuc","errorfileformat"])  %}
-                {% if errors %}
-                {% for message in errors %}
-                    <div class="alert alert-warning">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                {% endif %}
-            {% endwith %}
-            </div>
-        <p id="code">Upload Code</p>
-        <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="customSwitches">
-            <label class="custom-control-label" for="customSwitches">manual on/off</label>
-        </div>
-        <form method="post" enctype="multipart/form-data">
-            <input type="file" name="file" id="real-file" hidden="hidden"/>
-            <input type="submit" id="sub-file" hidden="hidden"/>
-            <button type="button" class="btn btn-primary" id="custom-codebtn">Upload Code</button>
-        </form>
-        <div id="Training_Button">
-            <p hidden="hidden">Start Training</p>
-            <a href="#section4"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"
-                                     hidden="hidden"></a>
-        </div>
-    </div>
-    <div class="section" id="Training Data">
-        <p>Train </p>
-        <p>progess bar</p>
-        <p>time</p>
-        <a href="#section5"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
-    </div>
-    <div class="section" id="Display Results">
-        <p>Show Results</p>
-    </div>
-</div>
 
 
-<script type="text/javascript">
-    const realBtn = document.getElementById("real-file");
-    const customCSVBtn = document.getElementById("custom-csvbtn");
-    const customCodeBtn = document.getElementById("custom-codebtn");
+    <script type="text/javascript">
+        const realBtn = document.getElementById("real-file");
+        const customCSVBtn = document.getElementById("custom-csvbtn");
+        const customCodeBtn = document.getElementById("custom-codebtn");
 
-    const realSubBtn = document.getElementById("sub-file");
+        const realSubBtn = document.getElementById("sub-file");
 
-    customCSVBtn.addEventListener("click", function () {
-        realBtn.click();
-    });
+        customCSVBtn.addEventListener("click", function () {
+            realBtn.click();
+        });
 
-    customCodeBtn.addEventListener("click", function () {
-        realBtn.click();
-    });
+        customCodeBtn.addEventListener("click", function () {
+            realBtn.click();
+        });
 
 
-    realBtn.addEventListener("change", function () {
-        if (realBtn.value) {
-            realSubBtn.click()
+        realBtn.addEventListener("change", function () {
+            if (realBtn.value) {
+                realSubBtn.click()
+            }
+        });
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.0.8/fullpage.js"
+            integrity="sha256-wypDCQw+qwWtdARZAAtUMv/1SWOEB1XHZwAFoNc9Wn8=" crossorigin="anonymous"></script>
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/js/mdb.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <script>
+    Vue.component('app-user', {
+    data: function () {
+        return {
+            items: [
+                {
+                    heading1: 'table cell',
+                    heading2: 'table cell',
+                    heading3: 'table cell',
+                    heading4: 'table cell',
+                    heading5: 'table cell',
+                    heading6: 'table cell',
+                    heading7: 'table cell',
+                    heading8: 'table cell',
+                    heading9: 'table cell',
+                    heading10: 'table cell',
+                    heading11: 'table cell',
+
+                },
+                {
+                    heading1: 'table cell',
+                    heading2: 'table cell',
+                    heading3: 'table cell',
+                    heading4: 'table cell',
+                    heading5: 'table cell',
+                    heading6: 'table cell',
+                    heading7: 'table cell',
+                    heading8: 'table cell',
+                    heading9: 'table cell',
+                    heading10: 'table cell',
+                    heading11: 'table cell',
+
+                },
+                {
+                    heading1: 'table cell',
+                    heading2: 'table cell',
+                    heading3: 'table cell',
+                    heading4: 'table cell',
+                    heading5: 'table cell',
+                    heading6: 'table cell',
+                    heading7: 'table cell',
+                    heading8: 'table cell',
+                    heading9: 'table cell',
+                    heading10: 'table cell',
+                    heading11: 'table cell',
+
+                },
+                {
+                    heading1: 'table cell',
+                    heading2: 'table cell',
+                    heading3: 'table cell',
+                    heading4: 'table cell',
+                    heading5: 'table cell',
+                    heading6: 'table cell',
+                    heading7: 'table cell',
+                    heading8: 'table cell',
+                    heading9: 'table cell',
+                    heading10: 'table cell',
+                    heading11: 'table cell',
+
+                },
+                {
+                    heading1: 'table cell',
+                    heading2: 'table cell',
+                    heading3: 'table cell',
+                    heading4: 'table cell',
+                    heading5: 'table cell',
+                    heading6: 'table cell',
+                    heading7: 'table cell',
+                    heading8: 'table cell',
+                    heading9: 'table cell',
+                    heading10: 'table cell',
+                    heading11: 'table cell',
+
+                }
+            ]
+        };
+
+    },
+    template: '<div>' +
+
+        '<b-table responsive head-variant="dark"  :items="items"></b-table>' +
+        '</div>'
+});
+
+Vue.component('card', {
+    data: function () {
+        return {
+            data: {
+                CSVSIZE: '34kb',
+                COLUMN: '299',
+                NAME: 'housing.csv',
+                TIME: '3ms'
+            }
         }
-    });
-</script>
+    },
+    delimiters: ['${', '}'],
+    template: '<div>' +
+        '<div class="card-deck">' +
+        ' <b-card ' +
+        ' border-variant="dark"' +
+        'header="Size"' +
+        'header-bg-variant="dark"' +
+        ' header-text-variant="white"' +
+        ' align="center">' +
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.0.8/fullpage.js"
-        integrity="sha256-wypDCQw+qwWtdARZAAtUMv/1SWOEB1XHZwAFoNc9Wn8=" crossorigin="anonymous"></script>
-<!-- JQuery -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<!-- Bootstrap tooltips -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
-<!-- Bootstrap core JavaScript -->
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<!-- MDB core JavaScript -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.10.1/js/mdb.min.js"></script>
-<script>
-    new fullpage('#fullPage', {
-        autoScrolling: true,
-        anchors: ['section1', 'section2', 'section3', 'section4', 'section5'],
-        verticalCentered: true
-    })
-    fullpage_api.setAllowScrolling(false);
-</script>
+        ' <b-card-text >${ data.CSVSIZE } </b-card-text>' +
+        '</b-card>' +
+        ' <b-card ' +
+        ' border-variant="primary"' +
+        'header="Column"' +
+        'header-bg-variant="primary"' +
+        ' header-text-variant="white"' +
+        ' align="center">' +
+
+        ' <b-card-text> ${ data.COLUMN } </b-card-text>' +
+        '</b-card>' +
+        ' <b-card ' +
+        ' border-variant="primary"' +
+        'header="Name"' +
+        'header-bg-variant="primary"' +
+        ' header-text-variant="white"' +
+        ' align="center">' +
+
+        ' <b-card-text>${ data.NAME }</b-card-text>' +
+        '</b-card>' +
+        ' <b-card ' +
+        ' border-variant="primary"' +
+        'header="Time"' +
+        'header-bg-variant="primary"' +
+        ' header-text-variant="white"' +
+        ' align="center">' +
+
+        ' <b-card-text>${ data.TIME }</b-card-text>' +
+        '</b-card>' +
+        '</div >' +
+        '</div>'
+
+});
+new Vue({
+    el: '#app',
+    delimiters: ["${", "}"]
+})
+    </script>
+    <script>
+        new fullpage('#fullPage', {
+            autoScrolling: true,
+            anchors: ['section1', 'section2', 'section3', 'section4', 'section5', 'section6'],
+            verticalCentered: false
+        })
+        fullpage_api.setAllowScrolling(false);
+    </script>
+
 {% endblock %}
 </body>
 </html>
