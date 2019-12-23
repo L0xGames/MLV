@@ -138,7 +138,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             <div id="Upload Code">
                 <p id="code">Upload Code</p>
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="customSwitches">
+                    <input type="checkbox" class="custom-control-input" name="toggling" value="checkval" id="customSwitches">
                     <label class="custom-control-label" for="customSwitches">manual on/off</label>
                 </div>
                 <form method="post" enctype="multipart/form-data">
@@ -165,31 +165,11 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
     </div>
 
 
-    <script type="text/javascript">
-        const realBtn = document.getElementById("real-file");
-        const customCSVBtn = document.getElementById("custom-csvbtn");
-        const customCodeBtn = document.getElementById("custom-codebtn");
 
-        const realSubBtn = document.getElementById("sub-file");
-
-        customCSVBtn.addEventListener("click", function () {
-            realBtn.click();
-        });
-
-        customCodeBtn.addEventListener("click", function () {
-            realBtn.click();
-        });
-
-
-        realBtn.addEventListener("change", function () {
-            if (realBtn.value) {
-                realSubBtn.click()
-            }
-        });
-    </script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
@@ -222,13 +202,15 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
     <script>
+
         Vue.component('app-user', {
             data: function () {
                 return {
+                    test22:"keck",
                     items: [
                         {
                             heading1: 'd_var',
-                            heading2: 'table cell',
+                            heading2: '22222',
                             heading3: 'table cell',
                             heading4: 'table cell',
                             heading5: 'table cell',
@@ -304,16 +286,41 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
 
                 '<b-table responsive head-variant="dark"  :items="items"></b-table>' +
                 '</div>'
+            , methods: {
+                sorting(dict){
+                    unsorted=[]
+                    for (d in dict){
+                        unsorted.push(d)
+                    }
+                    unsorted.sort()
+                    console.log(unsorted)
+                    sorted_dict={};
+                    for (i=0;i< unsorted.length;i++){
+                        sorted_dict[unsorted[i]]=dict[unsorted[i]];
+                    return sorted_dict
+                    }
+                },
+                getcsvext() {
+                    {#get infos from flask api#}
+                    var self = this;
+                    axios
+                        .get('http://127.0.0.1:5000/api/csvtable')
+                        .then(function (response) {
+                            self.items=response.data
+                        }).catch(error => console.log(error));
+                }
+            }, mounted() {
+                this.getcsvext();
+            }
         });
-
         Vue.component('card', {
             data: function () {
                 return {
                     data: {
-                        CSVSIZE: '34kb',
-                        COLUMN: '299',
-                        NAME: 'housing.csv',
-                        ROWS: '3ms'
+                        CSVSIZE: null,
+                        COLUMN: null,
+                        NAME: null,
+                        ROWS: null
                     }
                 }
             },
@@ -326,7 +333,6 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 'header-bg-variant="dark"' +
                 ' header-text-variant="white"' +
                 ' align="center">' +
-
                 ' <b-card-text >${ data.CSVSIZE } </b-card-text>' +
                 '</b-card>' +
                 ' <b-card ' +
@@ -349,7 +355,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 '</b-card>' +
                 ' <b-card ' +
                 ' border-variant="primary"' +
-                'header="Time"' +
+                'header="Rows"' +
                 'header-bg-variant="primary"' +
                 ' header-text-variant="white"' +
                 ' align="center">' +
@@ -358,12 +364,27 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 '</b-card>' +
                 '</div >' +
                 '</div>'
-
+            , methods: {
+                getInfos() {
+                    {#get infos from flask api#}
+                    var self = this;
+                    axios
+                        .get('http://127.0.0.1:5000/api/csvinfo')
+                        .then(function (response) {
+                            self.data.CSVSIZE = response.data[1];
+                            self.data.NAME = response.data[0];
+                            self.data.ROWS = response.data[2];
+                            self.data.COLUMN = response.data[3];
+                        });
+                }
+            }, mounted() {
+                this.getInfos();
+            }
         });
-        new Vue({
+        var vm = new Vue({
             el: '#app',
             delimiters: ["${", "}"]
-        })
+        });
     </script>
     <script>
         new fullpage('#fullPage', {
@@ -374,6 +395,28 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
         fullpage_api.setAllowScrolling(false);
     </script>
 
+    <script type="text/javascript">
+        const realBtn = document.getElementById("real-file");
+        const customCSVBtn = document.getElementById("custom-csvbtn");
+        const customCodeBtn = document.getElementById("custom-codebtn");
+
+        const realSubBtn = document.getElementById("sub-file");
+
+        customCSVBtn.addEventListener("click", function () {
+            realBtn.click();
+        });
+
+        customCodeBtn.addEventListener("click", function () {
+            realBtn.click();
+        });
+
+
+        realBtn.addEventListener("change", function () {
+            if (realBtn.value) {
+                realSubBtn.click()
+            }
+        });
+    </script>
 {% endblock %}
 </body>
 </html>
