@@ -58,9 +58,9 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             </div>
         </div>
         <div class="section">
-            <!-- MESSAGE SEC-->
+            <!-- MESSAGE SEC FAILED for CSV FILE UPLOAD-->
             <div class="=container">
-                {% with errors = get_flashed_messages(category_filter=["csvsuc","errorfileformat"]) %}
+                {% with errors = get_flashed_messages(category_filter=["errorfileformatcsv"]) %}
                     {% if errors %}
                         {% for message in errors %}
                             <div class="alert alert-warning">
@@ -71,10 +71,23 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                     {% endif %}
                 {% endwith %}
             </div>
+            <!-- MESSAGE SEC SUCCESSFUL for CSV FILE UPLOAD-->
+            <div class="=container">
+                {% with errors = get_flashed_messages(category_filter=["csvsuc"]) %}
+                    {% if errors %}
+                        {% for message in errors %}
+                            <div class="alert alert-success">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
             <div id="Upload Data">
                 <p id="test">Upload our data</p>
                 <form method="post" enctype="multipart/form-data">
-                    <input type="file" name="file" id="real-file" hidden="hidden"/>
+                    <input type="file" name="data_upload" id="real-file" hidden="hidden"/>
                     <input type="submit" id="sub-file" hidden="hidden"/>
                     <button type="button" class="btn btn-primary" id="custom-csvbtn">Upload CSV</button>
                 </form>
@@ -85,22 +98,36 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
         </div>
         <div class="section">
             <div id="info">
-            <div id="app">
-                <app-user id="table"></app-user>
-                <card id="info"></card>
+                <div id="app">
+                    <app-user id="table"></app-user>
+                    <card id="info"></card>
+                </div>
             </div>
+            <div id="button">
+                <a href="#section4"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"
+                                         id="Table_Button"></a>
             </div>
-        <div id="button">
-            <a href="#section4"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png" id="Table_Button"></a>
-       </div>
         </div>
         <div class="section">
-            <!-- MESSAGE SEC-->
+            <!-- MESSAGE SEC FAILED FOR CODE UPLOAD-->
             <div class="=container">
-                {% with errors = get_flashed_messages(category_filter=["pysuc","errorfileformat"]) %}
+                {% with errors = get_flashed_messages(category_filter=["errorfileformatpy"]) %}
                     {% if errors %}
                         {% for message in errors %}
                             <div class="alert alert-warning">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <!-- MESSAGE SEC SUCCESSFUL for CODE UPLOAD-->
+            <div class="=container">
+                {% with errors = get_flashed_messages(category_filter=["pysuc"]) %}
+                    {% if errors %}
+                        {% for message in errors %}
+                            <div class="alert alert-success">
                                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                                 {{ message }}
                             </div>
@@ -115,7 +142,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                     <label class="custom-control-label" for="customSwitches">manual on/off</label>
                 </div>
                 <form method="post" enctype="multipart/form-data">
-                    <input type="file" name="file" id="real-file" hidden="hidden"/>
+                    <input type="file" name="code_upload" id="real-file" hidden="hidden"/>
                     <input type="submit" id="sub-file" hidden="hidden"/>
                     <button type="button" class="btn btn-primary" id="custom-codebtn">Upload Code</button>
                 </form>
@@ -195,148 +222,148 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
     <script>
-    Vue.component('app-user', {
-    data: function () {
-        return {
-            items: [
-                {
-                    heading1: 'table cell',
-                    heading2: 'table cell',
-                    heading3: 'table cell',
-                    heading4: 'table cell',
-                    heading5: 'table cell',
-                    heading6: 'table cell',
-                    heading7: 'table cell',
-                    heading8: 'table cell',
-                    heading9: 'table cell',
-                    heading10: 'table cell',
-                    heading11: 'table cell',
+        Vue.component('app-user', {
+            data: function () {
+                return {
+                    items: [
+                        {
+                            heading1: 'd_var',
+                            heading2: 'table cell',
+                            heading3: 'table cell',
+                            heading4: 'table cell',
+                            heading5: 'table cell',
+                            heading6: 'table cell',
+                            heading7: 'table cell',
+                            heading8: 'table cell',
+                            heading9: 'table cell',
+                            heading10: 'table cell',
+                            heading11: 'table cell',
 
-                },
-                {
-                    heading1: 'table cell',
-                    heading2: 'table cell',
-                    heading3: 'table cell',
-                    heading4: 'table cell',
-                    heading5: 'table cell',
-                    heading6: 'table cell',
-                    heading7: 'table cell',
-                    heading8: 'table cell',
-                    heading9: 'table cell',
-                    heading10: 'table cell',
-                    heading11: 'table cell',
+                        },
+                        {
+                            heading1: 'table cell',
+                            heading2: 'table cell',
+                            heading3: 'table cell',
+                            heading4: 'table cell',
+                            heading5: 'table cell',
+                            heading6: 'table cell',
+                            heading7: 'table cell',
+                            heading8: 'table cell',
+                            heading9: 'table cell',
+                            heading10: 'table cell',
+                            heading11: 'table cell',
 
-                },
-                {
-                    heading1: 'table cell',
-                    heading2: 'table cell',
-                    heading3: 'table cell',
-                    heading4: 'table cell',
-                    heading5: 'table cell',
-                    heading6: 'table cell',
-                    heading7: 'table cell',
-                    heading8: 'table cell',
-                    heading9: 'table cell',
-                    heading10: 'table cell',
-                    heading11: 'table cell',
+                        },
+                        {
+                            heading1: 'table cell',
+                            heading2: 'table cell',
+                            heading3: 'table cell',
+                            heading4: 'table cell',
+                            heading5: 'table cell',
+                            heading6: 'table cell',
+                            heading7: 'table cell',
+                            heading8: 'table cell',
+                            heading9: 'table cell',
+                            heading10: 'table cell',
+                            heading11: 'table cell',
 
-                },
-                {
-                    heading1: 'table cell',
-                    heading2: 'table cell',
-                    heading3: 'table cell',
-                    heading4: 'table cell',
-                    heading5: 'table cell',
-                    heading6: 'table cell',
-                    heading7: 'table cell',
-                    heading8: 'table cell',
-                    heading9: 'table cell',
-                    heading10: 'table cell',
-                    heading11: 'table cell',
+                        },
+                        {
+                            heading1: 'table cell',
+                            heading2: 'table cell',
+                            heading3: 'table cell',
+                            heading4: 'table cell',
+                            heading5: 'table cell',
+                            heading6: 'table cell',
+                            heading7: 'table cell',
+                            heading8: 'table cell',
+                            heading9: 'table cell',
+                            heading10: 'table cell',
+                            heading11: 'table cell',
 
-                },
-                {
-                    heading1: 'table cell',
-                    heading2: 'table cell',
-                    heading3: 'table cell',
-                    heading4: 'table cell',
-                    heading5: 'table cell',
-                    heading6: 'table cell',
-                    heading7: 'table cell',
-                    heading8: 'table cell',
-                    heading9: 'table cell',
-                    heading10: 'table cell',
-                    heading11: 'table cell',
+                        },
+                        {
+                            heading1: 'table cell',
+                            heading2: 'table cell',
+                            heading3: 'table cell',
+                            heading4: 'table cell',
+                            heading5: 'table cell',
+                            heading6: 'table cell',
+                            heading7: 'table cell',
+                            heading8: 'table cell',
+                            heading9: 'table cell',
+                            heading10: 'table cell',
+                            heading11: 'table cell',
 
+                        }
+                    ]
+                };
+
+            },
+            template: '<div>' +
+
+                '<b-table responsive head-variant="dark"  :items="items"></b-table>' +
+                '</div>'
+        });
+
+        Vue.component('card', {
+            data: function () {
+                return {
+                    data: {
+                        CSVSIZE: '34kb',
+                        COLUMN: '299',
+                        NAME: 'housing.csv',
+                        ROWS: '3ms'
+                    }
                 }
-            ]
-        };
+            },
+            delimiters: ['${', '}'],
+            template: '<div>' +
+                '<div class="card-deck">' +
+                ' <b-card ' +
+                ' border-variant="dark"' +
+                'header="Size"' +
+                'header-bg-variant="dark"' +
+                ' header-text-variant="white"' +
+                ' align="center">' +
 
-    },
-    template: '<div>' +
+                ' <b-card-text >${ data.CSVSIZE } </b-card-text>' +
+                '</b-card>' +
+                ' <b-card ' +
+                ' border-variant="primary"' +
+                'header="Column"' +
+                'header-bg-variant="primary"' +
+                ' header-text-variant="white"' +
+                ' align="center">' +
 
-        '<b-table responsive head-variant="dark"  :items="items"></b-table>' +
-        '</div>'
-});
+                ' <b-card-text> ${ data.COLUMN } </b-card-text>' +
+                '</b-card>' +
+                ' <b-card ' +
+                ' border-variant="primary"' +
+                'header="Name"' +
+                'header-bg-variant="primary"' +
+                ' header-text-variant="white"' +
+                ' align="center">' +
 
-Vue.component('card', {
-    data: function () {
-        return {
-            data: {
-                CSVSIZE: '34kb',
-                COLUMN: '299',
-                NAME: 'housing.csv',
-                TIME: '3ms'
-            }
-        }
-    },
-    delimiters: ['${', '}'],
-    template: '<div>' +
-        '<div class="card-deck">' +
-        ' <b-card ' +
-        ' border-variant="dark"' +
-        'header="Size"' +
-        'header-bg-variant="dark"' +
-        ' header-text-variant="white"' +
-        ' align="center">' +
+                ' <b-card-text>${ data.NAME }</b-card-text>' +
+                '</b-card>' +
+                ' <b-card ' +
+                ' border-variant="primary"' +
+                'header="Time"' +
+                'header-bg-variant="primary"' +
+                ' header-text-variant="white"' +
+                ' align="center">' +
 
-        ' <b-card-text >${ data.CSVSIZE } </b-card-text>' +
-        '</b-card>' +
-        ' <b-card ' +
-        ' border-variant="primary"' +
-        'header="Column"' +
-        'header-bg-variant="primary"' +
-        ' header-text-variant="white"' +
-        ' align="center">' +
+                ' <b-card-text>${ data.ROWS }</b-card-text>' +
+                '</b-card>' +
+                '</div >' +
+                '</div>'
 
-        ' <b-card-text> ${ data.COLUMN } </b-card-text>' +
-        '</b-card>' +
-        ' <b-card ' +
-        ' border-variant="primary"' +
-        'header="Name"' +
-        'header-bg-variant="primary"' +
-        ' header-text-variant="white"' +
-        ' align="center">' +
-
-        ' <b-card-text>${ data.NAME }</b-card-text>' +
-        '</b-card>' +
-        ' <b-card ' +
-        ' border-variant="primary"' +
-        'header="Time"' +
-        'header-bg-variant="primary"' +
-        ' header-text-variant="white"' +
-        ' align="center">' +
-
-        ' <b-card-text>${ data.TIME }</b-card-text>' +
-        '</b-card>' +
-        '</div >' +
-        '</div>'
-
-});
-new Vue({
-    el: '#app',
-    delimiters: ["${", "}"]
-})
+        });
+        new Vue({
+            el: '#app',
+            delimiters: ["${", "}"]
+        })
     </script>
     <script>
         new fullpage('#fullPage', {
