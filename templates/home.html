@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <!-- Stopwatch-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/stopWatch.css">
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -109,6 +115,20 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             </div>
         </div>
         <div class="section">
+            <!-- Dropdown menu-->
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Select ML Algorithm
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" onclick="drop(id)" id="0" href="#">Support Vector Machine</a>
+                    <a class="dropdown-item" onclick="drop(id)" id="1" href="#">Lineare Regression</a>
+                    <a class="dropdown-item" onclick="drop(id)" id="2" href="#">Neuronales Netz</a>
+                    <a class="dropdown-item" onclick="drop(id)" id="3" href="#">Entscheidungsbäume</a>
+                    <a class="dropdown-item" onclick="drop(id)" id="4" href="#">Random Forest</a>
+                </div>
+            </div>
             <!-- MESSAGE SEC FAILED FOR CODE UPLOAD-->
             <div class="=container">
                 {% with errors = get_flashed_messages(category_filter=["errorfileformatpy"]) %}
@@ -138,8 +158,9 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             <div id="Upload Code">
                 <p id="code">Upload Code</p>
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" name="toggling" value="checkval" id="customSwitches">
-                    <label class="custom-control-label" for="customSwitches">manual on/off</label>
+                    <input type="checkbox" class="custom-control-input" name="toggling" value="checkval"
+                           id="customSwitches">
+                    <label class="custom-control-label" for="customSwitches">Automatic mode on/off</label>
                 </div>
                 <form method="post" enctype="multipart/form-data">
                     <input type="file" name="code_upload" id="real-file" hidden="hidden"/>
@@ -147,27 +168,42 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                     <button type="button" class="btn btn-primary" id="custom-codebtn">Upload Code</button>
                 </form>
                 <div id="Training_Button">
-                    <p hidden="hidden">Start Training</p>
-                    <a href="#section5"><img class="Button"
+                    <p>Start Training</p>
+                    <a href="#section5"><img class="Button" onclick="define_start()"
                                              src="https://img.icons8.com/color/48/000000/expand-arrow.png"
-                                             hidden="hidden"></a>
+                    ></a>
                 </div>
             </div>
         </div>
         <div class="section" id="Training Data">
-            <p>Train </p>
+            <p>RUNNING </p>
             <p>time</p>
+            <div id="timerContainer">
+                <div class="timer" onclick="startTimer()">Time</div>
+                <div class="startTimer reset" hidden="hidden" onclick="startTimer()">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="pauseTimer reset" hidden="hidden" onclick="pauseTimer()">
+                    <i class="fas fa-pause"></i>
+                </div>
+                <div class="resetTimer reset" hidden="hidden" onclick="resetTimer()">Reset</div>
+            </div>
             <a href="#section6"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
         </div>
         <div class="section" id="Display Results">
             <p>Show Results</p>
+            <p id="p_complete_time">Complete Time</p>
+            <p id="p_training_time">Training Time</p>
+            <p id="p_testing_time">Testing Time</p>
+            <p id="p_accuracy">Accuracy</p>
         </div>
     </div>
 
 
 
 
-    <!-- Optional JavaScript -->
+    <!-- JavaScript -->
+    <script type="text/javascript" src="/static/js/stopWatch.js"></script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -206,7 +242,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
         Vue.component('app-user', {
             data: function () {
                 return {
-                    test22:"keck",
+                    test22: "keck",
                     items: [
                         {
                             heading1: 'd_var',
@@ -287,17 +323,17 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 '<b-table responsive head-variant="dark"  :items="items"></b-table>' +
                 '</div>'
             , methods: {
-                sorting(dict){
-                    unsorted=[]
-                    for (d in dict){
+                sorting(dict) {
+                    unsorted = []
+                    for (d in dict) {
                         unsorted.push(d)
                     }
                     unsorted.sort()
                     console.log(unsorted)
-                    sorted_dict={};
-                    for (i=0;i< unsorted.length;i++){
-                        sorted_dict[unsorted[i]]=dict[unsorted[i]];
-                    return sorted_dict
+                    sorted_dict = {};
+                    for (i = 0; i < unsorted.length; i++) {
+                        sorted_dict[unsorted[i]] = dict[unsorted[i]];
+                        return sorted_dict
                     }
                 },
                 getcsvext() {
@@ -306,7 +342,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                     axios
                         .get('http://127.0.0.1:5000/api/csvtable')
                         .then(function (response) {
-                            self.items=response.data
+                            self.items = response.data
                         }).catch(error => console.log(error));
                 }
             }, mounted() {
@@ -375,7 +411,9 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                             self.data.NAME = response.data[0];
                             self.data.ROWS = response.data[2];
                             self.data.COLUMN = response.data[3];
-                        });
+                        }).catch(error => {
+                        console.log(error.response)
+                    });
                 }
             }, mounted() {
                 this.getInfos();
@@ -416,6 +454,74 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 realSubBtn.click()
             }
         });
+    </script>
+    <!-- Toggle communication with Flask by ajax-->
+    <script>
+
+        const toggle = document.getElementById("customSwitches");
+        const mlbtn = document.getElementById("dropdownMenuButton");
+        customCodeBtn.hidden = false;
+        mlbtn.hidden = true;
+        customCodeBtn.hidden = false;
+        var togglebool = false;
+
+
+        toggle.addEventListener("click", function () {
+            if (togglebool) {
+                togglebool = false;
+                mlbtn.hidden = true;
+                customCodeBtn.hidden = false;
+
+            } else {
+                togglebool = true;
+                mlbtn.hidden = false;
+                customCodeBtn.hidden = true;
+            }
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "http://127.0.0.1:5000/api/toggle", true);
+            xhttp.send(togglebool);
+
+
+        })
+
+    </script>
+    <!--dropdown functionality and communication by ajax with flask to select the right ML algorithm-->
+    <!--ajax request to start training-->
+    <script>
+        function drop(id) {
+            const mlbtn = document.getElementById("dropdownMenuButton");
+            const selectedbtn = document.getElementById(id);
+            mlbtn.firstChild.data = selectedbtn.firstChild.data;
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "http://127.0.0.1:5000/api/mlalg", true);
+            xhttp.send(id);
+
+        }
+
+        function start_training() {
+            resetTimer();
+            startTimer();
+            axios
+                .get('http://127.0.0.1:5000/api/training')
+                .then(function (response) {
+                    pauseTimer();
+                    document.getElementById("p_training_time").innerHTML = "Training Time: " + response.data.train_time + " s";
+                    document.getElementById("p_testing_time").innerHTML = "Testing Time: " + response.data.test_time + " s";
+                    document.getElementById("p_complete_time").innerHTML = "Overall Time: " + timerDisplay.innerHTML;
+                    document.getElementById("p_accuracy").innerHTML = "Accuracy: " + response.data.result;
+                }).catch(error => {
+                console.log(error.response)
+            });
+        }
+
+        function define_start() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "http://127.0.0.1:5000/api/def", false);
+            xhttp.send();
+            start_training();
+        }
     </script>
 {% endblock %}
 </body>
