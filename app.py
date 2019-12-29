@@ -24,8 +24,8 @@ dataframe = None
 file_size = None
 file_name = None
 file_pathf = None
+functions=None
 model_def = None
-training_split = None
 toggle = False
 ML_ALG = None
 X_train = None
@@ -41,7 +41,10 @@ def extcsv_helper():
     headers = []
     for i in range(0, 5):
         for num, head in enumerate(dataframe.iloc[0].index):
-            dicts[i][head] = str(dataframe.iloc[i][num])
+            if isinstance(dataframe.iloc[i][num], str):
+                dicts[i][head] = str(dataframe.iloc[i][num])
+            else:
+                dicts[i][head] = str(round(dataframe.iloc[i][num],2))
     app.logger.info(dicts)
     return dicts
 
@@ -50,7 +53,7 @@ def parse_code():
     # Spezifikation Code: Der Code enthält 2 Funktionen: Einer zum preprocessen und der andere zur Modeldefinition
     # Die Reihenfolge ist: 1.testsplit 2.Modeldef
     # Dies ist wichtig da wir hier die Funktionen mit Hilfe des ast auslesen und von der Reihenfolge ausgehen
-    # Außerdem kriegen die Funktionen folgene Parameter: Test_split(dataframe) und Modeldef(testsplit)
+    # Außerdem kriegen die Funktionen folgene Parameter: Test_split(dataframe) und Modeldef(X_train, X_test, y_train, y_test)
     # Folgende Rückgabewerte gibts für die Fkt.: Test_split=>dataframe und Modeldef=>modeldef type
     file = open(file_pathf, 'r')
     funcs = []
@@ -64,11 +67,9 @@ def parse_code():
 
 
 def parse_file_name():
-    file = open(file_pathf, 'r')
-    # parse oput module name
-    file_name = file.name
-    nameslist = file_name.split(".")
-    return nameslist[:1]
+    base=os.path.basename(file_pathf)
+    os.path.splitext(base)
+    return os.path.splitext(base)[0]
 
 
 # GET fitting model
@@ -99,6 +100,9 @@ def training():
 
 @app.route('/', methods=["GET", "POST"])
 def hello_world():
+    global toggle
+    toggle=False
+    app.logger.info(toggle)
     if request.method == "POST":
         app.logger.info(request.files)
         data_upload = None
@@ -106,9 +110,13 @@ def hello_world():
         # check which button is pressed by excepting keyerror
         try:
             data_upload = request.files["data_upload"]
+        except KeyError:
+            app.logger.info("Not a data file uploaded")
+
+        try:
             code_upload = request.files["code_upload"]
-        except:
-            app.logger.info("Some file uploaded")
+        except KeyError:
+            app.logger.info("not a code file uploaded")
         app.logger.info(data_upload)
         app.logger.info(code_upload)
         # Check which file is uplaoded
@@ -140,9 +148,17 @@ def hello_world():
                 file_path = os.path.join("uploads", code_upload.filename)
                 code_upload.save(file_path)
                 app.logger.info('CODE UPLOADED')
-                flash("Erfolgreich Hochgeladen", "pysuc")
                 global file_pathf
                 file_pathf = file_path
+                # parse funcs from code
+                global functions
+                try:
+                    functions = parse_code()
+                except:
+                    app.logger.info("There was an error in your uploaded Code. Please check...")
+                    flash("There was an error in your uploaded Code. Please check...", "errorfileformatpy")
+                    return render_template("home.html")
+                flash("Erfolgreich Hochgeladen", "pysuc")
             else:
                 # flash error for wrong file format
                 app.logger.info('Wrong file format for CODE')
@@ -195,8 +211,9 @@ def algorithm():
 @app.route('/api/def', methods=['POST'])
 def defining():
     app.logger.info("start training")
+    app.logger.info(toggle)
     # check if dataframe exists
-    if isinstance(dataframe, pd.DataFrame):
+    if isinstance(dataframe, pd.DataFrame) or True:
         global model_def
         global X_train, X_test, y_train, y_test
         if (toggle):
@@ -228,23 +245,24 @@ def defining():
                     app.logger.error("ML ALG Code unknown")
                     return make_response("ML ALG Code unknown", 404)
         else:
-            if(os._exists(file_pathf)):
-                # parse funcs from code
-                functions = parse_code()
+            if(os.path.exists(file_pathf) and functions is not None):
                 # parse filename
                 module_name = parse_file_name()
-                # import module by filename (module_name)
-                my_module = importlib.import_module(module_name)
+                # import module by filename and path (module_name)
+                spec = importlib.util.spec_from_file_location(module_name, file_pathf)
+                my_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(my_module)
+                #my_module = importlib.import_module(module_name)
                 importlib.invalidate_caches()
                 # call preprocess method with name as a string from functions list functions[0]=preprocess
                 # functions[1]=model def.
                 training_splitter = getattr(my_module, functions[0])
-                # save resulting training split in global var training_split
+                # save resulting training split in global vars
                 X_train, X_test, y_train, y_test = training_splitter(dataframe)
                 # Use second function for model definition functions[1]=model def.
                 model_init = getattr(my_module, functions[1])
                 # save resulting model definition in global var model_def
-                model_def = model_init(training_split)
+                model_def = model_init(X_train, X_test, y_train, y_test)
                 return make_response("finished", 200)
     return make_response("no df",404)
 

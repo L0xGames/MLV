@@ -118,7 +118,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                                          id="Table_Button"></a>
             </div>
         </div>
-        <div class="section">
+        <div class="section" id="code_upload_section">
             <!-- Dropdown menu-->
             <div class="dropdown" hidden="hidden">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -145,6 +145,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
+
             </div>
             <!-- MESSAGE SEC SUCCESSFUL for CODE UPLOAD-->
             <div class="=container">
@@ -168,8 +169,8 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                     <label class="custom-control-label" for="customSwitches">Automatic mode on/off</label>
                 </div>
                 <form method="post" enctype="multipart/form-data">
-                    <input type="file" name="code_upload" id="real-file" hidden="hidden"/>
-                    <input type="submit" id="sub-file" hidden="hidden"/>
+                    <input type="file" name="code_upload" id="real-file2" hidden="hidden"/>
+                    <input type="submit" id="sub-file2" hidden="hidden"/>
                     <button type="button" class="btn btn-primary" id="custom-codebtn">Upload Code</button>
                 </form>
                 <div id="model_select">
@@ -486,6 +487,10 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
         const customCSVBtn = document.getElementById("custom-csvbtn");
         const customCodeBtn = document.getElementById("custom-codebtn");
 
+        const realBtn2 = document.getElementById("real-file2");
+        const realSubBtn2=document.getElementById("sub-file2");
+
+
         const realSubBtn = document.getElementById("sub-file");
 
         customCSVBtn.addEventListener("click", function () {
@@ -493,13 +498,17 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
         });
 
         customCodeBtn.addEventListener("click", function () {
-            realBtn.click();
+            realBtn2.click();
         });
-
 
         realBtn.addEventListener("change", function () {
             if (realBtn.value) {
                 realSubBtn.click()
+            }
+        });
+        realBtn2.addEventListener("change", function () {
+            if (realBtn2.value) {
+                realSubBtn2.click()
             }
         });
     </script>
