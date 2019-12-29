@@ -32,7 +32,7 @@ X_train = None
 X_test = None
 y_train = None
 y_test = None
-y_pred=None
+y_pred = None
 
 
 def extcsv_helper():
@@ -75,26 +75,26 @@ def parse_file_name():
 @app.route('/api/training', methods=["GET"])
 def training():
     if (model_def is not None) and (isinstance(dataframe, pd.DataFrame)):
-        ajax={}
-        #training
+        ajax = {}
+        # training
         start_train = time.time()
         model_def.fit(X_train, y_train)
         stop_train = time.time()
-        train_time=stop_train-start_train
-        #testing
-        start_test=time.time()
+        train_time = stop_train - start_train
+        # testing
+        start_test = time.time()
         y_pred = model_def.predict(X_test)
         stop_test = time.time()
-        test_time=stop_test-start_test
-        #accuracy
-        result=r2_score(y_test, y_pred)
+        test_time = stop_test - start_test
+        # accuracy
+        result = r2_score(y_test, y_pred)
         app.logger.info(result)
-        #pack everything to dict for sending back to frontend
-        ajax["result"]=result
-        ajax["train_time"]=train_time
-        ajax["test_time"]=test_time
+        # pack everything to dict for sending back to frontend
+        ajax["result"] = result
+        ajax["train_time"] = train_time
+        ajax["test_time"] = test_time
         return make_response(jsonify(ajax), 200)
-    return make_response("wo",200)
+    return make_response("wo", 200)
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -201,8 +201,9 @@ def defining():
         global X_train, X_test, y_train, y_test
         if (toggle):
             # split original dataframe to tessplit and choose one of ML Algorithms depending on user selection
-            #preprocess
-            X_train, X_test, y_train, y_test = train_test_split(dataframe.drop(dataframe.columns[-1], axis=1), dataframe.iloc[:, -1], random_state=42)
+            # preprocess
+            X_train, X_test, y_train, y_test = train_test_split(dataframe.drop(dataframe.columns[-1], axis=1),
+                                                                dataframe.iloc[:, -1], random_state=42)
             imputer = SimpleImputer()
             scaler = StandardScaler()
             X_train = scaler.fit_transform(imputer.fit_transform(X_train))
@@ -245,7 +246,7 @@ def defining():
             # save resulting model definition in global var model_def
             model_def = model_init(training_split)
             return make_response("finished", 200)
-    return make_response("no df",404)
+    return make_response("no df", 404)
 
 
 if __name__ == '__main__':

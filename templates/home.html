@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
           integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/stopWatch.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"
+            integrity="sha256-TQq84xX6vkwR0Qs1qH5ADkP+MvH0W+9E7TdHJsoIQiM=" crossorigin="anonymous"></script>
+
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -106,9 +109,10 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             <div id="info">
                 <div id="app">
                     <app-user id="table"></app-user>
-                    <card id="info"></card>
+                    <infocard id="info"></infocard>
                 </div>
             </div>
+            <div id="code">Upload Code</div>
             <div id="button">
                 <a href="#section4"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"
                                          id="Table_Button"></a>
@@ -116,7 +120,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
         </div>
         <div class="section">
             <!-- Dropdown menu-->
-            <div class="dropdown">
+            <div class="dropdown" hidden="hidden">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Select ML Algorithm
@@ -156,7 +160,8 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 {% endwith %}
             </div>
             <div id="Upload Code">
-                <p id="code">Upload Code</p>
+                <p id="upload_code">Upload Code</p>
+                <p id="choose_model">Choose Model</p>
                 <div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input" name="toggling" value="checkval"
                            id="customSwitches">
@@ -167,6 +172,42 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                     <input type="submit" id="sub-file" hidden="hidden"/>
                     <button type="button" class="btn btn-primary" id="custom-codebtn">Upload Code</button>
                 </form>
+                <div id="model_select">
+                    <div class="card-deck">
+                        <div class="card" onclick="drop(id)" id="0">
+                            <div class="card-body">
+                                <h5 class="card-title">Support Vector Machine</h5>
+                                <a href="#" class="stretched-link"></a>
+                            </div>
+                        </div>
+                        <div class="card" onclick="drop(id)" id="1">
+                            <div class="card-body">
+                                <h5 class="card-title">Lineare Regression</h5>
+                                <a href="#" class="stretched-link"></a>
+                            </div>
+                        </div>
+                        <div class="card" onclick="drop(id)" id="2">
+                            <div class="card-body">
+                                <h5 class="card-title">Neural network</h5>
+                                <a href="#" class="stretched-link"></a>
+                            </div>
+                        </div>
+                        <div class="card" onclick="drop(id)" id="3">
+                            <div class="card-body">
+                                <h5 class="card-title">Decision tree</h5>
+                                <a href="#" class="stretched-link"></a>
+                            </div>
+                        </div>
+                        <div class="card" onclick="drop(id)" id="4">
+                            <div class="card-body">
+                                <h5 class="card-title">Random Forest</h5>
+                                <a href="#" class="stretched-link"></a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
                 <div id="Training_Button">
                     <p>Start Training</p>
                     <a href="#section5"><img class="Button" onclick="define_start()"
@@ -176,19 +217,30 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             </div>
         </div>
         <div class="section" id="Training Data">
-            <p>RUNNING </p>
-            <p>time</p>
-            <div id="timerContainer">
-                <div class="timer" onclick="startTimer()">Time</div>
-                <div class="startTimer reset" hidden="hidden" onclick="startTimer()">
-                    <i class="fas fa-play"></i>
-                </div>
-                <div class="pauseTimer reset" hidden="hidden" onclick="pauseTimer()">
-                    <i class="fas fa-pause"></i>
-                </div>
-                <div class="resetTimer reset" hidden="hidden" onclick="resetTimer()">Reset</div>
+            <p id="model_trains">Your model is training</p>
+            <div id="container">
+                <canvas id="myChart"></canvas>
             </div>
-            <a href="#section6"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
+            <p id="model_finised">Your model finished training</p>
+            <div id="time">
+                <div id="timerContainer">
+                    <div class="timer" onclick="startTimer()">00:00:00:000</div>
+                    <div class="startTimer reset" hidden="hidden" onclick="startTimer()">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="pauseTimer reset" hidden="hidden" onclick="pauseTimer()">
+                        <i class="fas fa-pause"></i>
+                    </div>
+                    <div class="resetTimer reset" hidden="hidden" onclick="resetTimer()">Reset</div>
+                </div>
+            </div>
+            <div id="button_results">
+                <p id="show_results">Look at the results</p>
+                <div id>
+                    <a href="#section6"><img class="Button"
+                                             src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
+                </div>
+            </div>
         </div>
         <div class="section" id="Display Results">
             <p>Show Results</p>
@@ -198,10 +250,6 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             <p id="p_accuracy">Accuracy</p>
         </div>
     </div>
-
-
-
-
     <!-- JavaScript -->
     <script type="text/javascript" src="/static/js/stopWatch.js"></script>
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -320,7 +368,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             },
             template: '<div>' +
 
-                '<b-table responsive head-variant="dark"  :items="items"></b-table>' +
+                '<b-table responsive="true" head-variant="dark" no-border-collapse="true" bordered="true"  :items="items"></b-table>' +
                 '</div>'
             , methods: {
                 sorting(dict) {
@@ -349,7 +397,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 this.getcsvext();
             }
         });
-        Vue.component('card', {
+        Vue.component('infocard', {
             data: function () {
                 return {
                     data: {
@@ -369,30 +417,30 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 'header-bg-variant="dark"' +
                 ' header-text-variant="white"' +
                 ' align="center">' +
-                ' <b-card-text >${ data.CSVSIZE } </b-card-text>' +
+                ' <b-card-text >${ data.CSVSIZE }B </b-card-text>' +
                 '</b-card>' +
                 ' <b-card ' +
-                ' border-variant="primary"' +
+                ' border-variant="dark"' +
                 'header="Column"' +
-                'header-bg-variant="primary"' +
+                'header-bg-variant="dark"' +
                 ' header-text-variant="white"' +
                 ' align="center">' +
 
                 ' <b-card-text> ${ data.COLUMN } </b-card-text>' +
                 '</b-card>' +
                 ' <b-card ' +
-                ' border-variant="primary"' +
+                ' border-variant="dark"' +
                 'header="Name"' +
-                'header-bg-variant="primary"' +
+                'header-bg-variant="dark"' +
                 ' header-text-variant="white"' +
                 ' align="center">' +
 
                 ' <b-card-text>${ data.NAME }</b-card-text>' +
                 '</b-card>' +
                 ' <b-card ' +
-                ' border-variant="primary"' +
+                ' border-variant="dark"' +
                 'header="Rows"' +
-                'header-bg-variant="primary"' +
+                'header-bg-variant="dark"' +
                 ' header-text-variant="white"' +
                 ' align="center">' +
 
@@ -460,9 +508,15 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
 
         const toggle = document.getElementById("customSwitches");
         const mlbtn = document.getElementById("dropdownMenuButton");
+        const modelselect = document.getElementById("model_select");
+        const uploadcode = document.getElementById("upload_code");
+        const choosemodel = document.getElementById("choose_model");
+        modelselect.hidden = true;
         customCodeBtn.hidden = false;
         mlbtn.hidden = true;
         customCodeBtn.hidden = false;
+        choosemodel.hidden = true;
+
         var togglebool = false;
 
 
@@ -471,11 +525,17 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 togglebool = false;
                 mlbtn.hidden = true;
                 customCodeBtn.hidden = false;
+                modelselect.hidden = true;
+                uploadcode.hidden = false;
+                choosemodel.hidden = true;
 
             } else {
                 togglebool = true;
                 mlbtn.hidden = false;
                 customCodeBtn.hidden = true;
+                modelselect.hidden = false;
+                uploadcode.hidden = true;
+                choosemodel.hidden = false;
             }
 
             var xhttp = new XMLHttpRequest();
@@ -488,11 +548,20 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
     </script>
     <!--dropdown functionality and communication by ajax with flask to select the right ML algorithm-->
     <!--ajax request to start training-->
+
+    <script>
+        $(".card").click(function () {
+            $(this).toggleClass('card card bg-primary text-white')
+        });
+
+
+    </script>
     <script>
         function drop(id) {
             const mlbtn = document.getElementById("dropdownMenuButton");
             const selectedbtn = document.getElementById(id);
             mlbtn.firstChild.data = selectedbtn.firstChild.data;
+            $(selectedbtn).removeClass("card").addClass("card bg-primary text-white ");
 
             var xhttp = new XMLHttpRequest();
             xhttp.open("POST", "http://127.0.0.1:5000/api/mlalg", true);
@@ -500,13 +569,27 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
 
         }
 
+        $("#model_finised").hide();
+        $("#show_results").hide();
+        $("#button_results").hide();
+
         function start_training() {
+            window.setInterval(function () {
+                    randomizeData();
+                }
+                , 500);
+
             resetTimer();
             startTimer();
             axios
                 .get('http://127.0.0.1:5000/api/training')
                 .then(function (response) {
                     pauseTimer();
+                    $("#model_trains").hide(400);
+                    $('#model_finised').show(400);
+                    $("#show_results").show(400);
+                    $("#button_results").show(400);
+                    $("#container").hide(400);
                     document.getElementById("p_training_time").innerHTML = "Training Time: " + response.data.train_time + " s";
                     document.getElementById("p_testing_time").innerHTML = "Testing Time: " + response.data.test_time + " s";
                     document.getElementById("p_complete_time").innerHTML = "Overall Time: " + timerDisplay.innerHTML;
@@ -522,6 +605,72 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             xhttp.send();
             start_training();
         }
+    </script>
+    <script>
+        var randomColorGenerator = function () {
+            return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
+        };
+
+        let data_chart = [1, 10, 5, 2, 20, 30, 45];
+        myData = {
+            labels: ["", "", "", "", "", "", ""],
+            datasets: [
+                {
+                    data: data_chart,
+                    backgroundColor: [randomColorGenerator(), randomColorGenerator(), randomColorGenerator(), randomColorGenerator(), randomColorGenerator(), randomColorGenerator(), randomColorGenerator()],
+                    scaleLineColor: 'transparent'
+                }]
+        };
+
+        // Default chart defined with type: 'line'
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: myData,
+            options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        display: false
+                    },
+                    gridLines: {
+                        display: false,
+                    },
+                     display: false
+
+                }],
+                xAxes: [{
+                    gridLines: {
+                        display: false,
+
+                    },
+                    angleLines: {
+                        display: false
+                    },
+                     display: false
+                }],
+            },
+            legend: {
+                display: false,
+
+                }
+
+        }
+
+        });
+
+        // Function runs on chart type select update
+
+
+        // Randomize data button function
+        function randomizeData() {
+            let newdata_chart = data_chart.map(x => Math.floor(Math.random() * 50));
+
+            myData.datasets[0].data = newdata_chart
+            myChart.update();
+        };
+
+
     </script>
 {% endblock %}
 </body>

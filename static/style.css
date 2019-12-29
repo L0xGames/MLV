@@ -15,12 +15,12 @@
 #Upload\ Data {
   text-align: center;
   font-size: 3em;
-  padding-top: 250px;
+  padding-top: 200px;
 }
 
 #Upload\ Code{
   text-align: center;
-  padding-top: 250px;
+  padding-top: 200px;
 }
 #start_training{
   font-size:3em;
@@ -29,31 +29,69 @@
 #Training\ Data{
   font-size:3em;
   text-align: center;
-  padding-top: 225px;
+  padding-top: 100px;
 }
 
 #Display\ Results{
   text-align: center;
   font-size:3em;
-  padding-top: 300px;
-}
-#Upload\ Code{
 
 }
+
 #Training_Button{
+  padding-top: 50px;
   font-size:3em;
   text-align: center;
 
 }
 
-#code{
+#upload_code{
   font-size:3em;
+}
+#model_select{
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 
+#table{
+  padding-top: 10px;
+}
+#info{
+   padding-left: 8px;
+  padding-right: 8px;
+}
+
+#choose_model{
+  font-size:3em;
+}
+
+#code{
+  padding-top: 50px;
+  text-align: center;
+  font-size: 3em;
+}
+
 #button{
-    margin-left: auto;
-  margin-right: auto;
+  text-align: center;
+}
+
+
+#Table_Button{
+text-align: center;
+}
+
+#time{
+  text-align: center;
+}
+#container{
+            height: 350px;
+            width: 650px;
+ margin: 0 auto;
+        }
+
+#show_results{
+  padding-top: 100px;
 }
 
 
