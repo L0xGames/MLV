@@ -249,6 +249,12 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             <p id="p_training_time">Training Time</p>
             <p id="p_testing_time">Testing Time</p>
             <p id="p_accuracy">Accuracy</p>
+             <div id="app2">
+            <r2_score_bar></r2_score_bar>
+             </div>
+
+            <a href="http://127.0.0.1:5000/#section2"><button type="button" class="btn btn-primary" onclick="reset()">New CSV</button></a>
+            <a href="http://127.0.0.1:5000/#section4"><button type="button" class="btn btn-primary" onclick="reset()">Diffrent Model</button></a>
         </div>
     </div>
     <!-- JavaScript -->
@@ -287,6 +293,8 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
     <script>
+
+
 
         Vue.component('app-user', {
             data: function () {
@@ -472,6 +480,31 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             el: '#app',
             delimiters: ["${", "}"]
         });
+
+
+    </script>
+    <script>
+     Vue.component('r2_score_bar',{
+            data: function () {
+                return {
+        value: 0.4444,
+                };
+            },
+            template:  ' <div>'  +
+                ' <div>'  +
+               '     <b-progress class="mt-2" :max=1 show-value>'  +
+
+        '            <b-progress-bar :value="value " :precision="5" ></b-progress-bar>'  +
+                '    </b-progress>'  +
+
+                '   </div>' +
+                '   </div>'
+        });
+
+     var vm2 = new Vue({
+            el: '#app2',
+            delimiters: ["${", "}"]
+        });
     </script>
     <script>
         new fullpage('#fullPage', {
@@ -566,6 +599,15 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
 
     </script>
     <script>
+    function reset() {
+         $("#model_finised").hide();
+        $("#show_results").hide();
+        $("#button_results").hide();
+         $("#model_trains").show();
+         $("#container").show();
+
+
+    }
         function drop(id) {
             const mlbtn = document.getElementById("dropdownMenuButton");
             const selectedbtn = document.getElementById(id);
@@ -586,7 +628,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             window.setInterval(function () {
                     randomizeData();
                 }
-                , 500);
+                , 700);
 
             resetTimer();
             startTimer();
@@ -679,6 +721,9 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             myChart.update();
         };
 
+
+    </script>
+    <script>
 
     </script>
 {% endblock %}
