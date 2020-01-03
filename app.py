@@ -34,7 +34,6 @@ y_train = None
 y_test = None
 y_pred=None
 
-
 def extcsv_helper():
     # get headers and put them in dicts
     dicts = [dict(), dict(), dict(), dict(), dict()]

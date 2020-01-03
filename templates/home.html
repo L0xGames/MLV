@@ -249,12 +249,16 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             <p id="p_training_time">Training Time</p>
             <p id="p_testing_time">Testing Time</p>
             <p id="p_accuracy">Accuracy</p>
-             <div id="app2">
-            <r2_score_bar></r2_score_bar>
-             </div>
+            <div id="pasteprogressbar"></div>
+            <div id="descrprogress"><p>Descr</p>
+                </div>
 
-            <a href="http://127.0.0.1:5000/#section2"><button type="button" class="btn btn-primary" onclick="reset()">New CSV</button></a>
-            <a href="http://127.0.0.1:5000/#section4"><button type="button" class="btn btn-primary" onclick="reset()">Diffrent Model</button></a>
+            <a href="http://127.0.0.1:5000/#section2">
+                <button type="button" class="btn btn-primary" onclick="reset()">New CSV</button>
+            </a>
+            <a href="http://127.0.0.1:5000/#section4">
+                <button type="button" class="btn btn-primary" onclick="reset()">Diffrent Model</button>
+            </a>
         </div>
     </div>
     <!-- JavaScript -->
@@ -293,7 +297,6 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
     <script>
-
 
 
         Vue.component('app-user', {
@@ -484,29 +487,6 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
 
     </script>
     <script>
-     Vue.component('r2_score_bar',{
-            data: function () {
-                return {
-        value: 0.4444,
-                };
-            },
-            template:  ' <div>'  +
-                ' <div>'  +
-               '     <b-progress class="mt-2" :max=1 show-value>'  +
-
-        '            <b-progress-bar :value="value " :precision="5" ></b-progress-bar>'  +
-                '    </b-progress>'  +
-
-                '   </div>' +
-                '   </div>'
-        });
-
-     var vm2 = new Vue({
-            el: '#app2',
-            delimiters: ["${", "}"]
-        });
-    </script>
-    <script>
         new fullpage('#fullPage', {
             autoScrolling: true,
             anchors: ['section1', 'section2', 'section3', 'section4', 'section5', 'section6'],
@@ -521,7 +501,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
         const customCodeBtn = document.getElementById("custom-codebtn");
 
         const realBtn2 = document.getElementById("real-file2");
-        const realSubBtn2=document.getElementById("sub-file2");
+        const realSubBtn2 = document.getElementById("sub-file2");
 
 
         const realSubBtn = document.getElementById("sub-file");
@@ -599,15 +579,16 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
 
     </script>
     <script>
-    function reset() {
-         $("#model_finised").hide();
-        $("#show_results").hide();
-        $("#button_results").hide();
-         $("#model_trains").show();
-         $("#container").show();
+        function reset() {
+            $("#model_finised").hide();
+            $("#show_results").hide();
+            $("#button_results").hide();
+            $("#model_trains").show();
+            $("#container").show();
 
 
-    }
+        }
+
         function drop(id) {
             const mlbtn = document.getElementById("dropdownMenuButton");
             const selectedbtn = document.getElementById(id);
@@ -645,6 +626,30 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                     document.getElementById("p_testing_time").innerHTML = "Testing Time: " + response.data.test_time + " s";
                     document.getElementById("p_complete_time").innerHTML = "Overall Time: " + timerDisplay.innerHTML;
                     document.getElementById("p_accuracy").innerHTML = "Accuracy: " + response.data.result;
+
+                    let r2=parseFloat(response.data.result);
+                    if (r2<0){
+                        document.getElementById("pasteprogressbar").innerHTML="<div class=\"progress\">\n" +
+                        "                <div class=\"progress-bar bg-danger progress-bar-striped progress-bar-animated\" role=\"progressbar\"\n" +
+                        "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 33%\">poor</div>\n" +
+                        "            </div>"
+                        document.getElementById("descrprogress").innerHTML="Any negative R squared value means that the model definition is poor."
+
+                    }
+                    else if(r2==0){
+                        document.getElementById("pasteprogressbar").innerHTML="<div class=\"progress\">\n" +
+                        "                <div class=\"progress-bar bg-info progress-bar-striped progress-bar-animated\" role=\"progressbar\"\n" +
+                        "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 66%\">mediocre</div>\n" +
+                        "            </div>"
+                        document.getElementById("descrprogress").innerHTML="Any R squared value equal to zero means that the regression analysis is a horizontal line through the mean value."
+                    }
+                    else{
+                        document.getElementById("pasteprogressbar").innerHTML="<div class=\"progress\">\n" +
+                        "                <div class=\"progress-bar bg-success progress-bar-striped progress-bar-animated\" role=\"progressbar\"\n" +
+                        "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 100%\">good</div>\n" +
+                        "            </div>"
+                        document.getElementById("descrprogress").innerHTML="Any R squared value greater than zero means that the regression analysis did better than just using a horizontal line through the mean value."
+                    }
                 }).catch(error => {
                 console.log(error.response)
             });
@@ -679,34 +684,34 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             type: 'bar',
             data: myData,
             options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            display: false
+                        },
+                        gridLines: {
+                            display: false,
+                        },
                         display: false
-                    },
-                    gridLines: {
-                        display: false,
-                    },
-                     display: false
 
-                }],
-                xAxes: [{
-                    gridLines: {
-                        display: false,
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: false,
 
-                    },
-                    angleLines: {
+                        },
+                        angleLines: {
+                            display: false
+                        },
                         display: false
-                    },
-                     display: false
-                }],
-            },
-            legend: {
-                display: false,
+                    }],
+                },
+                legend: {
+                    display: false,
 
                 }
 
-        }
+            }
 
         });
 

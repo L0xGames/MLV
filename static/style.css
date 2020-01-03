@@ -94,4 +94,6 @@ text-align: center;
   padding-top: 100px;
 }
 
-
+#small {
+  font-size: 10%;
+}
