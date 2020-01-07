@@ -34,8 +34,29 @@
 
 #Display\ Results{
   text-align: center;
-  font-size:3em;
 
+}
+#p_complete_time{
+  font-size: 2em;
+}
+#p_training_time{
+  font-size: 2em;
+}
+#p_testing_time{
+  font-size: 2em;
+}
+#p_accuracy{
+  font-size: 2em;
+}
+#descrprogress{
+  font-size: 2em;
+}
+#results{
+  font-size: 3em;
+}
+#pasteprogressbar{
+  padding-left: 100px;
+  padding-right: 100px;
 }
 
 #Training_Button{
