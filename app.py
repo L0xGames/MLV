@@ -5,8 +5,14 @@ from hurry.filesize import size
 import pandas as pd
 import os, ast
 import importlib
+
+
+from yellowbrick.classifier import ClassPredictionError
+import matplotlib.pyplot as plt, mpld3
+
+
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, r2_score
+from sklearn.metrics import accuracy_score, r2_score, classification_report, f1_score
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.linear_model import LinearRegression
@@ -74,6 +80,7 @@ def parse_file_name():
 # GET fitting model
 @app.route('/api/training', methods=["GET"])
 def training():
+    global y_pred
     if (model_def is not None) and (isinstance(dataframe, pd.DataFrame)):
         ajax={}
         #training
@@ -87,7 +94,7 @@ def training():
         stop_test = time.time()
         test_time=stop_test-start_test
         #accuracy
-        result=r2_score(y_test, y_pred)
+        result=r2_score(y_test,y_pred)
         app.logger.info(result)
         #pack everything to dict for sending back to frontend
         ajax["result"]=result
@@ -265,6 +272,25 @@ def defining():
                 return make_response("finished", 200)
     return make_response("no df",404)
 
+
+@app.route('/api/testing', methods=["GET"])
+def get_test():
+    #rf and lr
+    # visualizer = PredictionError(model_def)
+    # visualizer.fit(X_train, y_train)  # Fit the training data to the visualizer
+    # visualizer.score(X_test, y_test)  # Evaluate the model on the test data
+    #visualizer.show()
+
+    # Instantiate the classification model and visualizer
+    visualizer = ClassPredictionError(model_def)
+
+    # Fit the training data to the visualizer
+    visualizer.fit(X_train, y_train)
+
+    # Evaluate the model on the test data
+    visualizer.score(X_test, y_test)
+
+    mpld3.show()
 
 if __name__ == '__main__':
     app.run()
