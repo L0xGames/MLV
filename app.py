@@ -1,27 +1,31 @@
 import os
 
+import numpy as np
 from flask import Flask, render_template, request, flash, make_response, jsonify
 from hurry.filesize import size
 import pandas as pd
 import os, ast
 import importlib
 
-
-from yellowbrick.classifier import ClassPredictionError
-import matplotlib.pyplot as plt, mpld3
-
+from yellowbrick.classifier import ClassPredictionError, PrecisionRecallCurve, ConfusionMatrix
+from yellowbrick.features import Rank1D, RadViz, Rank2D, ParallelCoordinates, JointPlotVisualizer, Manifold
+from yellowbrick.features.pca import PCADecomposition
+import matplotlib.pyplot as plt
+import mpld3
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, r2_score, classification_report, f1_score
+from sklearn.metrics import r2_score, f1_score
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
-from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression, RidgeClassifier, Ridge
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import LabelEncoder
 import time
+
+from yellowbrick.regressor import PredictionError, ResidualsPlot
 
 app = Flask(__name__)
 # TODO new secret key
@@ -30,7 +34,7 @@ dataframe = None
 file_size = None
 file_name = None
 file_pathf = None
-functions=None
+functions = None
 model_def = None
 toggle = False
 ML_ALG = None
@@ -38,7 +42,11 @@ X_train = None
 X_test = None
 y_train = None
 y_test = None
-y_pred=None
+y_pred = None
+# 0 for regression and 1 for classification ALG
+ML_ALG_nr = None
+Enc = None
+
 
 def extcsv_helper():
     # get headers and put them in dicts
@@ -49,7 +57,7 @@ def extcsv_helper():
             if isinstance(dataframe.iloc[i][num], str):
                 dicts[i][head] = str(dataframe.iloc[i][num])
             else:
-                dicts[i][head] = str(round(dataframe.iloc[i][num],2))
+                dicts[i][head] = str(round(dataframe.iloc[i][num], 2))
     app.logger.info(dicts)
     return dicts
 
@@ -72,7 +80,7 @@ def parse_code():
 
 
 def parse_file_name():
-    base=os.path.basename(file_pathf)
+    base = os.path.basename(file_pathf)
     os.path.splitext(base)
     return os.path.splitext(base)[0]
 
@@ -82,32 +90,32 @@ def parse_file_name():
 def training():
     global y_pred
     if (model_def is not None) and (isinstance(dataframe, pd.DataFrame)):
-        ajax={}
-        #training
+        ajax = {}
+        # training
         start_train = time.time()
         model_def.fit(X_train, y_train)
         stop_train = time.time()
-        train_time=stop_train-start_train
-        #testing
-        start_test=time.time()
+        train_time = stop_train - start_train
+        # testing
+        start_test = time.time()
         y_pred = model_def.predict(X_test)
         stop_test = time.time()
-        test_time=stop_test-start_test
-        #accuracy
-        result=r2_score(y_test,y_pred)
+        test_time = stop_test - start_test
+        # accuracy
+        result = r2_score(y_test, y_pred)
         app.logger.info(result)
-        #pack everything to dict for sending back to frontend
-        ajax["result"]=result
-        ajax["train_time"]=train_time
-        ajax["test_time"]=test_time
+        # pack everything to dict for sending back to frontend
+        ajax["result"] = result
+        ajax["train_time"] = train_time
+        ajax["test_time"] = test_time
         return make_response(jsonify(ajax), 200)
-    return make_response("wo",200)
+    return make_response("wo", 200)
 
 
 @app.route('/', methods=["GET", "POST"])
 def hello_world():
     global toggle
-    toggle=False
+    toggle = False
     app.logger.info(toggle)
     if request.method == "POST":
         app.logger.info(request.files)
@@ -222,43 +230,47 @@ def defining():
     if isinstance(dataframe, pd.DataFrame) or True:
         global model_def
         global X_train, X_test, y_train, y_test
-        if (toggle):
+        global ML_ALG_nr
+        if toggle:
             # split original dataframe to tessplit and choose one of ML Algorithms depending on user selection
-            #preprocess
-            X_train, X_test, y_train, y_test = train_test_split(dataframe.drop(dataframe.columns[-1], axis=1), dataframe.iloc[:, -1], random_state=42)
-            imputer = SimpleImputer()
-            scaler = StandardScaler()
-            X_train = scaler.fit_transform(imputer.fit_transform(X_train))
-            X_test = scaler.transform(imputer.transform(X_test))
-            y_train = LabelEncoder().fit_transform(y_train)
             if ML_ALG is not None:
                 if ML_ALG == 0:
+                    ML_ALG_nr = 1
                     model_def = SVC(kernel='linear')
-                    return make_response("finished", 200)
                 elif ML_ALG == 1:
+                    ML_ALG_nr = 0
                     model_def = LinearRegression(normalize=True)
-                    return make_response("finished", 200)
                 elif ML_ALG == 2:
+                    ML_ALG_nr = 1
                     model_def = MLPClassifier(hidden_layer_sizes=(13, 13, 13), max_iter=10000)
-                    return make_response("finished", 200)
                 elif ML_ALG == 3:
+                    ML_ALG_nr = 1
                     model_def = DecisionTreeClassifier()
-                    return make_response("finished", 200)
                 elif ML_ALG == 4:
+                    ML_ALG_nr = 0
                     model_def = RandomForestRegressor(n_estimators=1000, random_state=42)
-                    return make_response("finished", 200)
                 else:
                     app.logger.error("ML ALG Code unknown")
                     return make_response("ML ALG Code unknown", 404)
+            # preprocess
+            X_train, X_test, y_train, y_test = train_test_split(dataframe.drop(dataframe.columns[-1], axis=1),
+                                                                dataframe.iloc[:, -1], random_state=42)
+            imputer = SimpleImputer()
+            scaler = StandardScaler()
+            global Enc
+            Enc = LabelEncoder()
+            y_train = Enc.fit_transform(y_train)
+            y_test = Enc.fit_transform(y_test)
+            return make_response("finished", 200)
         else:
-            if(os.path.exists(file_pathf) and functions is not None):
+            if (os.path.exists(file_pathf) and functions is not None):
                 # parse filename
                 module_name = parse_file_name()
                 # import module by filename and path (module_name)
                 spec = importlib.util.spec_from_file_location(module_name, file_pathf)
                 my_module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(my_module)
-                #my_module = importlib.import_module(module_name)
+                # my_module = importlib.import_module(module_name)
                 importlib.invalidate_caches()
                 # call preprocess method with name as a string from functions list functions[0]=preprocess
                 # functions[1]=model def.
@@ -270,27 +282,63 @@ def defining():
                 # save resulting model definition in global var model_def
                 model_def = model_init(X_train, X_test, y_train, y_test)
                 return make_response("finished", 200)
-    return make_response("no df",404)
+    return make_response("no df", 404)
 
 
 @app.route('/api/testing', methods=["GET"])
 def get_test():
-    #rf and lr
-    # visualizer = PredictionError(model_def)
-    # visualizer.fit(X_train, y_train)  # Fit the training data to the visualizer
-    # visualizer.score(X_test, y_test)  # Evaluate the model on the test data
-    #visualizer.show()
+    #classes = list(Enc.inverse_transform(model_def.classes_))
+    #classification
+    # # Instantiate the classification model and visualizer
+    # visualizer = ClassPredictionError(DecisionTreeClassifier(), classes=classes)
+    # # Fit the training data to the visualizer
+    # visualizer.fit(X_train, y_train)
+    # # Evaluate the model on the test data
+    # visualizer.score(X_test, y_test)
 
-    # Instantiate the classification model and visualizer
-    visualizer = ClassPredictionError(model_def)
+    # The ConfusionMatrix visualizer taxes a model
+    #cm = ConfusionMatrix(model_def, classes=classes)
 
-    # Fit the training data to the visualizer
-    visualizer.fit(X_train, y_train)
+    # Fit fits the passed model. This is unnecessary if you pass the visualizer a pre-fitted model
+    #cm.fit(X_train, y_train)
 
-    # Evaluate the model on the test data
+    # To create the ConfusionMatrix, we need some test data. Score runs predict() on the data
+    # and then creates the confusion_matrix from scikit-learn.
+    #cm.score(X_test, y_test)
+
+
+
+
+    #ONLY FEATURES
+    # Instantiate the visualizer
+    # visualizer = RadViz(classes=classes)
+    #
+    # visualizer.fit(X_train, y_train)  # Fit the data to the visualizer
+    # visualizer.transform(X_train)
+
+    # Instantiate the visualizer
+    #viz = Manifold(manifold="tsne")
+    #viz.fit_transform(X_train, y_train)  # Fit the data to the visualizer
+
+    #regression
+
+    # Instantiate the linear model and visualizer
+    #visualizer = PredictionError(model_def,identity=True)
+    #visualizer.fit(X_train, y_train)  # Fit the training data to the visualizer
+    #visualizer.score(X_test, y_test)  # Evaluate the model on the test data
+
+    # Instantiate the model and visualizer
+    visualizer = ResidualsPlot(model_def)
+    visualizer.fit(X_train, y_train)  # Fit the training data to the visualizer
     visualizer.score(X_test, y_test)
 
-    mpld3.show()
+
+    fig = plt.gcf()
+
+    some_htmL=mpld3.fig_to_html(fig)
+    return some_htmL
+    #mpld3.show()
+
 
 if __name__ == '__main__':
     app.run()
