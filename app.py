@@ -301,7 +301,7 @@ def get_csvtable():
 def toggle():
     js_string = str(request.data)
     global toggle
-    if (js_string.find("t") >= 0):
+    if js_string.find("t") >= 0:
         toggle = True
     else:
         toggle = False
