@@ -248,10 +248,11 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             <p id="p_complete_time">Complete Time</p>
             <p id="p_training_time">Training Time</p>
             <p id="p_testing_time">Testing Time</p>
-            <p id="p_accuracy">Accuracy</p>
+            <p id="p_accuracy">R2 Score</p>
+            <p id="p_accuracy2">F1 Score</p>
             <div id="pasteprogressbar"></div>
             <div id="descrprogress"><p>Descr</p>
-                </div>
+            </div>
 
             <a href="http://127.0.0.1:5000/#section2">
                 <button type="button" class="btn btn-primary" onclick="reset()">New CSV</button>
@@ -259,6 +260,16 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             <a href="http://127.0.0.1:5000/#section4">
                 <button type="button" class="btn btn-primary" onclick="reset()">Diffrent Model</button>
             </a>
+        </div>
+        <div class="section" id="sec7">
+            <div id="plot1"></div>
+            <div id="plot2"></div>
+            <div id="plot3"></div>
+        </div>
+        <div class="section" id="sec8">
+        </div>
+        <div class="section" id="sec9">
+
         </div>
     </div>
     <!-- JavaScript -->
@@ -489,7 +500,7 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
     <script>
         new fullpage('#fullPage', {
             autoScrolling: true,
-            anchors: ['section1', 'section2', 'section3', 'section4', 'section5', 'section6'],
+            anchors: ['section1', 'section2', 'section3', 'section4', 'section5', 'section6', 'section7', 'section8', 'section9'],
             verticalCentered: false
         })
         fullpage_api.setAllowScrolling(false);
@@ -625,33 +636,51 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                     document.getElementById("p_training_time").innerHTML = "Training Time: " + response.data.train_time + " s";
                     document.getElementById("p_testing_time").innerHTML = "Testing Time: " + response.data.test_time + " s";
                     document.getElementById("p_complete_time").innerHTML = "Overall Time: " + timerDisplay.innerHTML;
-                    document.getElementById("p_accuracy").innerHTML = "Accuracy: " + response.data.result;
-
-                    let r2=parseFloat(response.data.result);
-                    if (r2<0){
-                        document.getElementById("pasteprogressbar").innerHTML="<div class=\"progress\">\n" +
-                        "                <div class=\"progress-bar bg-danger  role=\"progressbar\"\n" +
-                        "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 33%\">poor</div>\n" +
-                        "            </div>"
-                        document.getElementById("descrprogress").innerHTML="Any negative R squared value means that the model definition is poor."
-
+                    document.getElementById("p_accuracy").innerHTML = "R2_SCORE: " + response.data.result;
+                    if (response.data.f1 != null) {
+                        document.getElementById("p_accuracy2").innerHTML = "F1 SCORE: " + response.data.f1;
+                    } else {
+                        document.getElementById("p_accuracy2").innerHTML = "F1 SCORE: No Score, because of Regression";
                     }
-                    else if(r2==0){
-                        document.getElementById("pasteprogressbar").innerHTML="<div class=\"progress\">\n" +
-                        "                <div class=\"progress-bar bg-info   role=\"progressbar\"\n" +
-                        "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 66%\">mediocre</div>\n" +
-                        "            </div>"
-                        document.getElementById("descrprogress").innerHTML="Any R squared value equal to zero means that the regression analysis is a horizontal line through the mean value."
-                    }
-                    else{
-                        document.getElementById("pasteprogressbar").innerHTML="<div class=\"progress\">\n" +
-                        "                <div class=\"progress-bar   role=\"progressbar\"\n" +
-                        "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 100%\">good</div>\n" +
-                        "            </div>"
-                        document.getElementById("descrprogress").innerHTML="Any R squared value greater than zero means that the regression analysis did better than just using a horizontal line through the mean value."
+                    {# display and evaluate js,html  #}
+                    document.getElementById("plot1").innerHTML = response.data.htmls[0].html;
+                    eval(response.data.htmls[0].js);
+                    document.getElementById("plot2").innerHTML = response.data.htmls[1].html;
+                    eval(response.data.htmls[1].js);
+                    document.getElementById("plot3").innerHTML = response.data.htmls[2].html;
+                    eval(response.data.htmls[2].js);
+
+
+                    let r2 = parseFloat(response.data.result);
+                    if (r2 < 0) {
+                        document.getElementById("pasteprogressbar").innerHTML = "<div class=\"progress\">\n" +
+                            "                <div class=\"progress-bar bg-danger  role=\"progressbar\"\n" +
+                            "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 33%\">poor</div>\n" +
+                            "            </div>"
+                        document.getElementById("descrprogress").innerHTML = "Any negative R squared value means that the model definition is poor."
+
+                    } else if (r2 == 0) {
+                        document.getElementById("pasteprogressbar").innerHTML = "<div class=\"progress\">\n" +
+                            "                <div class=\"progress-bar bg-info   role=\"progressbar\"\n" +
+                            "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 66%\">mediocre</div>\n" +
+                            "            </div>"
+                        document.getElementById("descrprogress").innerHTML = "Any R squared value equal to zero means that the regression analysis is a horizontal line through the mean value."
+                    } else {
+                        document.getElementById("pasteprogressbar").innerHTML = "<div class=\"progress\">\n" +
+                            "                <div class=\"progress-bar   role=\"progressbar\"\n" +
+                            "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 100%\">good</div>\n" +
+                            "            </div>"
+                        document.getElementById("descrprogress").innerHTML = "Any R squared value greater than zero means that the regression analysis did better than just using a horizontal line through the mean value."
                     }
                 }).catch(error => {
                 console.log(error.response)
+                alert("Error Strings not supported in Csvs");
+                pauseTimer();
+                $("#model_trains").hide(400);
+                $('#model_finised').show(400);
+                $("#show_results").show(400);
+                $("#button_results").show(400);
+                $("#container").hide(400);
             });
         }
 

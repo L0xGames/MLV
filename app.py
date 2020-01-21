@@ -1,30 +1,22 @@
-import os
-
-import numpy as np
-from flask import Flask, render_template, request, flash, make_response, jsonify
-from hurry.filesize import size
-import pandas as pd
-import os, ast
+import ast
 import importlib
-
-from yellowbrick.classifier import ClassPredictionError, PrecisionRecallCurve, ConfusionMatrix
-from yellowbrick.features import Rank1D, RadViz, Rank2D, ParallelCoordinates, JointPlotVisualizer, Manifold
-from yellowbrick.features.pca import PCADecomposition
+import os
+import time
 import matplotlib.pyplot as plt
 import mpld3
-
-from sklearn.model_selection import train_test_split
+import pandas as pd
+from flask import Flask, render_template, request, flash, make_response, jsonify
+from hurry.filesize import size
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, f1_score
+from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
-from sklearn.svm import SVC
-from sklearn.linear_model import LinearRegression, RidgeClassifier, Ridge
-from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import LabelEncoder
-import time
-
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from yellowbrick.classifier import ClassPredictionError, ConfusionMatrix
+from yellowbrick.features import Manifold
 from yellowbrick.regressor import PredictionError, ResidualsPlot
 
 app = Flask(__name__)
@@ -46,6 +38,97 @@ y_pred = None
 # 0 for regression and 1 for classification ALG
 ML_ALG_nr = None
 Enc = None
+
+
+def preprocess_html(html_list):
+    all_htmls = []
+    for html in html_list:
+        js_html = {}
+        index = html.find("<script>")
+        up = html[:index]
+        js_html["html"] = up
+        index2 = html.find("</script>")
+        down = html[index + 8:index2]
+        js_html["js"] = down
+        all_htmls.append(js_html)
+    return all_htmls
+
+
+def get_plots():
+    all_plots = []
+    # ONLY FEATURES
+
+    # Instantiate the visualizer
+    plt.figure(figsize=(5, 5))
+    viz = Manifold(manifold="tsne")
+    # Fit the data to the visualizer
+    viz.fit_transform(X_train, y_train)
+    # save to html
+    fig = plt.gcf()
+    some_htmL = mpld3.fig_to_html(fig)
+    all_plots.append("<p>Manifold Visualization</p>" + some_htmL)
+    # clear plot
+    plt.clf()
+
+    if ML_ALG_nr == 1:
+        # classification
+        classes = list(Enc.inverse_transform(model_def.classes_))
+
+        # Instantiate the classification model and visualizer
+        visualizer = ClassPredictionError(DecisionTreeClassifier(), classes=classes)
+        # Fit the training data to the visualizer
+        visualizer.fit(X_train, y_train)
+        # Evaluate the model on the test data
+        visualizer.score(X_test, y_test)
+        # save to html
+        fig = plt.gcf()
+        some_htmL = mpld3.fig_to_html(fig)
+        all_plots.append("<p>Class Prediction Error</p>" + some_htmL)
+        # clear plot
+        plt.clf()
+
+        # The ConfusionMatrix visualizer taxes a model
+        cm = ConfusionMatrix(model_def, classes=classes)
+        # Fit fits the passed model. This is unnecessary if you pass the visualizer a pre-fitted model
+        cm.fit(X_train, y_train)
+        # To create the ConfusionMatrix, we need some test data. Score runs predict() on the data
+        # and then creates the confusion_matrix from scikit-learn.
+        cm.score(X_test, y_test)
+        # save to html
+        fig = plt.gcf()
+        some_htmL = mpld3.fig_to_html(fig)
+        all_plots.append("<p>Confusion Matrix</p>" + some_htmL)
+        # clear plot
+        plt.clf()
+
+        return all_plots
+
+    elif ML_ALG_nr == 0:
+        # regression
+
+        # Instantiate the linear model and visualizer
+        visualizer = PredictionError(model_def, identity=True)
+        visualizer.fit(X_train, y_train)  # Fit the training data to the visualizer
+        visualizer.score(X_test, y_test)  # Evaluate the model on the test data
+        # save to html
+        fig = plt.gcf()
+        some_htmL = mpld3.fig_to_html(fig)
+        all_plots.append("<p>Prediction Error Plot</p>" + some_htmL)
+        # clear plot
+        plt.clf()
+
+        # Instantiate the model and visualizer
+        visualizer = ResidualsPlot(model_def)
+        visualizer.fit(X_train, y_train)  # Fit the training data to the visualizer
+        visualizer.score(X_test, y_test)
+        # save to html
+        fig = plt.gcf()
+        some_htmL = mpld3.fig_to_html(fig)
+        all_plots.append("<p>Residuals Plot</p>" + some_htmL)
+        # clear plot
+        plt.clf()
+
+        return all_plots
 
 
 def extcsv_helper():
@@ -90,10 +173,14 @@ def parse_file_name():
 def training():
     global y_pred
     if (model_def is not None) and (isinstance(dataframe, pd.DataFrame)):
+        f1 = None
         ajax = {}
         # training
         start_train = time.time()
-        model_def.fit(X_train, y_train)
+        try:
+            model_def.fit(X_train, y_train)
+        except:
+            return make_response("Error", 404)
         stop_train = time.time()
         train_time = stop_train - start_train
         # testing
@@ -104,7 +191,16 @@ def training():
         # accuracy
         result = r2_score(y_test, y_pred)
         app.logger.info(result)
+        if ML_ALG_nr == 1:
+            f1 = f1_score(y_test, y_pred, average='weighted')
+            app.logger.info(f1)
+        # get all plots
+        htmls = get_plots()
+        # preprocess htmls
+        preprocessed_html = preprocess_html(htmls)
         # pack everything to dict for sending back to frontend
+        ajax["f1"] = f1
+        ajax["htmls"] = preprocessed_html
         ajax["result"] = result
         ajax["train_time"] = train_time
         ajax["test_time"] = test_time
@@ -231,6 +327,7 @@ def defining():
         global model_def
         global X_train, X_test, y_train, y_test
         global ML_ALG_nr
+        global Enc
         if toggle:
             # split original dataframe to tessplit and choose one of ML Algorithms depending on user selection
             if ML_ALG is not None:
@@ -255,9 +352,6 @@ def defining():
             # preprocess
             X_train, X_test, y_train, y_test = train_test_split(dataframe.drop(dataframe.columns[-1], axis=1),
                                                                 dataframe.iloc[:, -1], random_state=42)
-            imputer = SimpleImputer()
-            scaler = StandardScaler()
-            global Enc
             Enc = LabelEncoder()
             y_train = Enc.fit_transform(y_train)
             y_test = Enc.fit_transform(y_test)
@@ -276,68 +370,13 @@ def defining():
                 # functions[1]=model def.
                 training_splitter = getattr(my_module, functions[0])
                 # save resulting training split in global vars
-                X_train, X_test, y_train, y_test = training_splitter(dataframe)
+                X_train, X_test, y_train, y_test, Enc = training_splitter(dataframe)
                 # Use second function for model definition functions[1]=model def.
                 model_init = getattr(my_module, functions[1])
                 # save resulting model definition in global var model_def
-                model_def = model_init(X_train, X_test, y_train, y_test)
+                model_def, ML_ALG_nr = model_init(X_train, X_test, y_train, y_test)
                 return make_response("finished", 200)
     return make_response("no df", 404)
-
-
-@app.route('/api/testing', methods=["GET"])
-def get_test():
-    #classes = list(Enc.inverse_transform(model_def.classes_))
-    #classification
-    # # Instantiate the classification model and visualizer
-    # visualizer = ClassPredictionError(DecisionTreeClassifier(), classes=classes)
-    # # Fit the training data to the visualizer
-    # visualizer.fit(X_train, y_train)
-    # # Evaluate the model on the test data
-    # visualizer.score(X_test, y_test)
-
-    # The ConfusionMatrix visualizer taxes a model
-    #cm = ConfusionMatrix(model_def, classes=classes)
-
-    # Fit fits the passed model. This is unnecessary if you pass the visualizer a pre-fitted model
-    #cm.fit(X_train, y_train)
-
-    # To create the ConfusionMatrix, we need some test data. Score runs predict() on the data
-    # and then creates the confusion_matrix from scikit-learn.
-    #cm.score(X_test, y_test)
-
-
-
-
-    #ONLY FEATURES
-    # Instantiate the visualizer
-    # visualizer = RadViz(classes=classes)
-    #
-    # visualizer.fit(X_train, y_train)  # Fit the data to the visualizer
-    # visualizer.transform(X_train)
-
-    # Instantiate the visualizer
-    #viz = Manifold(manifold="tsne")
-    #viz.fit_transform(X_train, y_train)  # Fit the data to the visualizer
-
-    #regression
-
-    # Instantiate the linear model and visualizer
-    #visualizer = PredictionError(model_def,identity=True)
-    #visualizer.fit(X_train, y_train)  # Fit the training data to the visualizer
-    #visualizer.score(X_test, y_test)  # Evaluate the model on the test data
-
-    # Instantiate the model and visualizer
-    visualizer = ResidualsPlot(model_def)
-    visualizer.fit(X_train, y_train)  # Fit the training data to the visualizer
-    visualizer.score(X_test, y_test)
-
-
-    fig = plt.gcf()
-
-    some_htmL=mpld3.fig_to_html(fig)
-    return some_htmL
-    #mpld3.show()
 
 
 if __name__ == '__main__':
