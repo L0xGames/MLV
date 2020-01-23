@@ -8,12 +8,9 @@
     <link rel="stylesheet" href="/static/stopWatch.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"
             integrity="sha256-TQq84xX6vkwR0Qs1qH5ADkP+MvH0W+9E7TdHJsoIQiM=" crossorigin="anonymous"></script>
-
-
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -38,11 +35,7 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"/>
-
-
     <!-- Load polyfills to support older browsers -->
-
-
     <!-- Load Vue followed by BootstrapVue -->
     <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
     <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
@@ -56,10 +49,11 @@ bei einem Klick auf unsere Buttons ein Klick auf den tatsächlichen Button simul
 im Filebrowser ausgewählt wurde, ändert sich der "value" von dem tatsächlichen Button. Dadurch weiß man, dass man jetzt die Datei
 durch einen simulierten Klick auf den Submit button in den uploads Ordner schicken kann, was in app.py geschieht-->
 
-{% block content %}
+
     <div id="fullPage">
         <div class="section" id="Landing Page">
             <div id="Titel">Machine Learning Visualization</div>
+            <div id="particles-js" id="background"></div>
             <div id="Button_Landing_Page">
                 <p>Start Process</p>
                 <a href="#section2"><img class="Button"
@@ -244,31 +238,44 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
             </div>
         </div>
         <div class="section" id="Display Results">
-            <p id="results">Show Results</p>
-            <p id="p_complete_time">Complete Time</p>
-            <p id="p_training_time">Training Time</p>
-            <p id="p_testing_time">Testing Time</p>
-            <p id="p_accuracy">R2 Score</p>
-            <p id="p_accuracy2">F1 Score</p>
-            <div id="pasteprogressbar"></div>
-            <div id="descrprogress"><p>Descr</p>
+
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4"><p id="results">Results</p></div>
+                    <div class="col-sm-4"><a href="http://127.0.0.1:5000/#section2">
+                        <button type="button" class="btn btn-primary" onclick="reset()">New CSV</button>
+                    </a>
+                        <a href="http://127.0.0.1:5000/#section4">
+                            <button type="button" class="btn btn-primary" onclick="reset()">Diffrent Model</button>
+                        </a></div>
+                    <div class="col-sm-4">
+                        <div id="plot1" align="right"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div id="plot3" align="center"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div id="plot2" align="right"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6" id="time_results">
+                        <p id="p_complete_time">Complete Time</p>
+                        <p id="p_training_time">Training Time</p>
+                        <p id="p_testing_time">Testing Time</p>
+                    </div>
+                    <div class="col-sm-6" id="score_results">
+                        <p id="p_accuracy">R2 Score</p>
+                        <p id="p_accuracy2">F1 Score</p></div>
+                    <div class="col-sm-12" id="bar_results">
+                        <div id="pasteprogressbar"></div>
+                        <div id="descrprogress"><p>Descr</p></div>
+                    </div>
+                </div>
             </div>
 
-            <a href="http://127.0.0.1:5000/#section2">
-                <button type="button" class="btn btn-primary" onclick="reset()">New CSV</button>
-            </a>
-            <a href="http://127.0.0.1:5000/#section4">
-                <button type="button" class="btn btn-primary" onclick="reset()">Diffrent Model</button>
-            </a>
-        </div>
-        <div class="section" id="sec7">
-            <div id="plot1"></div>
-            <div id="plot2"></div>
-            <div id="plot3"></div>
-        </div>
-        <div class="section" id="sec8">
-        </div>
-        <div class="section" id="sec9">
 
         </div>
     </div>
@@ -307,459 +314,27 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
-    <script>
 
 
-        Vue.component('app-user', {
-            data: function () {
-                return {
-                    test22: "keck",
-                    items: [
-                        {
-                            heading1: 'd_var',
-                            heading2: '22222',
-                            heading3: 'table cell',
-                            heading4: 'table cell',
-                            heading5: 'table cell',
-                            heading6: 'table cell',
-                            heading7: 'table cell',
-                            heading8: 'table cell',
-                            heading9: 'table cell',
-                            heading10: 'table cell',
-                            heading11: 'table cell',
 
-                        },
-                        {
-                            heading1: 'table cell',
-                            heading2: 'table cell',
-                            heading3: 'table cell',
-                            heading4: 'table cell',
-                            heading5: 'table cell',
-                            heading6: 'table cell',
-                            heading7: 'table cell',
-                            heading8: 'table cell',
-                            heading9: 'table cell',
-                            heading10: 'table cell',
-                            heading11: 'table cell',
-
-                        },
-                        {
-                            heading1: 'table cell',
-                            heading2: 'table cell',
-                            heading3: 'table cell',
-                            heading4: 'table cell',
-                            heading5: 'table cell',
-                            heading6: 'table cell',
-                            heading7: 'table cell',
-                            heading8: 'table cell',
-                            heading9: 'table cell',
-                            heading10: 'table cell',
-                            heading11: 'table cell',
-
-                        },
-                        {
-                            heading1: 'table cell',
-                            heading2: 'table cell',
-                            heading3: 'table cell',
-                            heading4: 'table cell',
-                            heading5: 'table cell',
-                            heading6: 'table cell',
-                            heading7: 'table cell',
-                            heading8: 'table cell',
-                            heading9: 'table cell',
-                            heading10: 'table cell',
-                            heading11: 'table cell',
-
-                        },
-                        {
-                            heading1: 'table cell',
-                            heading2: 'table cell',
-                            heading3: 'table cell',
-                            heading4: 'table cell',
-                            heading5: 'table cell',
-                            heading6: 'table cell',
-                            heading7: 'table cell',
-                            heading8: 'table cell',
-                            heading9: 'table cell',
-                            heading10: 'table cell',
-                            heading11: 'table cell',
-
-                        }
-                    ]
-                };
-
-            },
-            template: '<div>' +
-
-                '<b-table responsive="true" head-variant="dark" no-border-collapse="true" bordered="true"  :items="items"></b-table>' +
-                '</div>'
-            , methods: {
-                sorting(dict) {
-                    unsorted = []
-                    for (d in dict) {
-                        unsorted.push(d)
-                    }
-                    unsorted.sort()
-                    console.log(unsorted)
-                    sorted_dict = {};
-                    for (i = 0; i < unsorted.length; i++) {
-                        sorted_dict[unsorted[i]] = dict[unsorted[i]];
-                        return sorted_dict
-                    }
-                },
-                getcsvext() {
-                    {#get infos from flask api#}
-                    var self = this;
-                    axios
-                        .get('http://127.0.0.1:5000/api/csvtable')
-                        .then(function (response) {
-                            self.items = response.data
-                        }).catch(error => console.log(error));
-                }
-            }, mounted() {
-                this.getcsvext();
-            }
-        });
-        Vue.component('infocard', {
-            data: function () {
-                return {
-                    data: {
-                        CSVSIZE: null,
-                        COLUMN: null,
-                        NAME: null,
-                        ROWS: null
-                    }
-                }
-            },
-            delimiters: ['${', '}'],
-            template: '<div>' +
-                '<div class="card-deck">' +
-                ' <b-card ' +
-                ' border-variant="dark"' +
-                'header="Size"' +
-                'header-bg-variant="dark"' +
-                ' header-text-variant="white"' +
-                ' align="center">' +
-                ' <b-card-text >${ data.CSVSIZE }B </b-card-text>' +
-                '</b-card>' +
-                ' <b-card ' +
-                ' border-variant="dark"' +
-                'header="Column"' +
-                'header-bg-variant="dark"' +
-                ' header-text-variant="white"' +
-                ' align="center">' +
-
-                ' <b-card-text> ${ data.COLUMN } </b-card-text>' +
-                '</b-card>' +
-                ' <b-card ' +
-                ' border-variant="dark"' +
-                'header="Name"' +
-                'header-bg-variant="dark"' +
-                ' header-text-variant="white"' +
-                ' align="center">' +
-
-                ' <b-card-text>${ data.NAME }</b-card-text>' +
-                '</b-card>' +
-                ' <b-card ' +
-                ' border-variant="dark"' +
-                'header="Rows"' +
-                'header-bg-variant="dark"' +
-                ' header-text-variant="white"' +
-                ' align="center">' +
-
-                ' <b-card-text>${ data.ROWS }</b-card-text>' +
-                '</b-card>' +
-                '</div >' +
-                '</div>'
-            , methods: {
-                getInfos() {
-                    {#get infos from flask api#}
-                    var self = this;
-                    axios
-                        .get('http://127.0.0.1:5000/api/csvinfo')
-                        .then(function (response) {
-                            self.data.CSVSIZE = response.data[1];
-                            self.data.NAME = response.data[0];
-                            self.data.ROWS = response.data[2];
-                            self.data.COLUMN = response.data[3];
-                        }).catch(error => {
-                        console.log(error.response)
-                    });
-                }
-            }, mounted() {
-                this.getInfos();
-            }
-        });
-        var vm = new Vue({
-            el: '#app',
-            delimiters: ["${", "}"]
-        });
-
-
-    </script>
-    <script>
-        new fullpage('#fullPage', {
-            autoScrolling: true,
-            anchors: ['section1', 'section2', 'section3', 'section4', 'section5', 'section6', 'section7', 'section8', 'section9'],
-            verticalCentered: false
-        })
-        fullpage_api.setAllowScrolling(false);
-    </script>
-
-    <script type="text/javascript">
-        const realBtn = document.getElementById("real-file");
-        const customCSVBtn = document.getElementById("custom-csvbtn");
-        const customCodeBtn = document.getElementById("custom-codebtn");
-
-        const realBtn2 = document.getElementById("real-file2");
-        const realSubBtn2 = document.getElementById("sub-file2");
-
-
-        const realSubBtn = document.getElementById("sub-file");
-
-        customCSVBtn.addEventListener("click", function () {
-            realBtn.click();
-        });
-
-        customCodeBtn.addEventListener("click", function () {
-            realBtn2.click();
-        });
-
-        realBtn.addEventListener("change", function () {
-            if (realBtn.value) {
-                realSubBtn.click()
-            }
-        });
-        realBtn2.addEventListener("change", function () {
-            if (realBtn2.value) {
-                realSubBtn2.click()
-            }
-        });
-    </script>
     <!-- Toggle communication with Flask by ajax-->
-    <script>
-
-        const toggle = document.getElementById("customSwitches");
-        const mlbtn = document.getElementById("dropdownMenuButton");
-        const modelselect = document.getElementById("model_select");
-        const uploadcode = document.getElementById("upload_code");
-        const choosemodel = document.getElementById("choose_model");
-        modelselect.hidden = true;
-        customCodeBtn.hidden = false;
-        mlbtn.hidden = true;
-        customCodeBtn.hidden = false;
-        choosemodel.hidden = true;
-
-        var togglebool = false;
 
 
-        toggle.addEventListener("click", function () {
-            if (togglebool) {
-                togglebool = false;
-                mlbtn.hidden = true;
-                customCodeBtn.hidden = false;
-                modelselect.hidden = true;
-                uploadcode.hidden = false;
-                choosemodel.hidden = true;
-
-            } else {
-                togglebool = true;
-                mlbtn.hidden = false;
-                customCodeBtn.hidden = true;
-                modelselect.hidden = false;
-                uploadcode.hidden = true;
-                choosemodel.hidden = false;
-            }
-
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "http://127.0.0.1:5000/api/toggle", true);
-            xhttp.send(togglebool);
-
-
-        })
-
-    </script>
-    <!--dropdown functionality and communication by ajax with flask to select the right ML algorithm-->
-    <!--ajax request to start training-->
-
+    <script type="text/javascript" src="/static/js/particles.js"></script>
+    <script type="text/javascript" src="/static/js/app.js"></script>
+    <script type="text/javascript" src="/static/js/data.js"></script>
+    <script type="text/javascript" src="/static/js/fullpage_config.js"></script>
+    <script type="text/javascript" src="/static/js/training.js"></script>
+    <script type="text/javascript" src="/static/js/diagram.js"></script>
+    <script type="text/javascript" src="/static/js/buttons.js"></script>
+    <script type="text/javascript" src="/static/js/menu.js"></script>
     <script>
         $(".card").click(function () {
             $(this).toggleClass('card card bg-primary text-white')
         });
-
-
     </script>
-    <script>
-        function reset() {
-            $("#model_finised").hide();
-            $("#show_results").hide();
-            $("#button_results").hide();
-            $("#model_trains").show();
-            $("#container").show();
 
 
-        }
 
-        function drop(id) {
-            const mlbtn = document.getElementById("dropdownMenuButton");
-            const selectedbtn = document.getElementById(id);
-            mlbtn.firstChild.data = selectedbtn.firstChild.data;
-            $(selectedbtn).removeClass("card").addClass("card bg-primary text-white ");
-
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "http://127.0.0.1:5000/api/mlalg", true);
-            xhttp.send(id);
-
-        }
-
-        $("#model_finised").hide();
-        $("#show_results").hide();
-        $("#button_results").hide();
-
-        function start_training() {
-            window.setInterval(function () {
-                    randomizeData();
-                }
-                , 700);
-
-            resetTimer();
-            startTimer();
-            axios
-                .get('http://127.0.0.1:5000/api/training')
-                .then(function (response) {
-                    pauseTimer();
-                    $("#model_trains").hide(400);
-                    $('#model_finised').show(400);
-                    $("#show_results").show(400);
-                    $("#button_results").show(400);
-                    $("#container").hide(400);
-                    document.getElementById("p_training_time").innerHTML = "Training Time: " + response.data.train_time + " s";
-                    document.getElementById("p_testing_time").innerHTML = "Testing Time: " + response.data.test_time + " s";
-                    document.getElementById("p_complete_time").innerHTML = "Overall Time: " + timerDisplay.innerHTML;
-                    document.getElementById("p_accuracy").innerHTML = "R2_SCORE: " + response.data.result;
-                    if (response.data.f1 != null) {
-                        document.getElementById("p_accuracy2").innerHTML = "F1 SCORE: " + response.data.f1;
-                    } else {
-                        document.getElementById("p_accuracy2").innerHTML = "F1 SCORE: No Score, because of Regression";
-                    }
-                    {# display and evaluate js,html  #}
-                    document.getElementById("plot1").innerHTML = response.data.htmls[0].html;
-                    eval(response.data.htmls[0].js);
-                    document.getElementById("plot2").innerHTML = response.data.htmls[1].html;
-                    eval(response.data.htmls[1].js);
-                    document.getElementById("plot3").innerHTML = response.data.htmls[2].html;
-                    eval(response.data.htmls[2].js);
-
-
-                    let r2 = parseFloat(response.data.result);
-                    if (r2 < 0) {
-                        document.getElementById("pasteprogressbar").innerHTML = "<div class=\"progress\">\n" +
-                            "                <div class=\"progress-bar bg-danger  role=\"progressbar\"\n" +
-                            "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 33%\">poor</div>\n" +
-                            "            </div>"
-                        document.getElementById("descrprogress").innerHTML = "Any negative R squared value means that the model definition is poor."
-
-                    } else if (r2 == 0) {
-                        document.getElementById("pasteprogressbar").innerHTML = "<div class=\"progress\">\n" +
-                            "                <div class=\"progress-bar bg-info   role=\"progressbar\"\n" +
-                            "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 66%\">mediocre</div>\n" +
-                            "            </div>"
-                        document.getElementById("descrprogress").innerHTML = "Any R squared value equal to zero means that the regression analysis is a horizontal line through the mean value."
-                    } else {
-                        document.getElementById("pasteprogressbar").innerHTML = "<div class=\"progress\">\n" +
-                            "                <div class=\"progress-bar   role=\"progressbar\"\n" +
-                            "                     aria-valuenow=\"0.5\" aria-valuemin=\"0\" aria-valuemax=\"1\" style=\"width: 100%\">good</div>\n" +
-                            "            </div>"
-                        document.getElementById("descrprogress").innerHTML = "Any R squared value greater than zero means that the regression analysis did better than just using a horizontal line through the mean value."
-                    }
-                }).catch(error => {
-                console.log(error.response)
-                alert("Error Strings not supported in Csvs");
-                pauseTimer();
-                $("#model_trains").hide(400);
-                $('#model_finised').show(400);
-                $("#show_results").show(400);
-                $("#button_results").show(400);
-                $("#container").hide(400);
-            });
-        }
-
-        function define_start() {
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "http://127.0.0.1:5000/api/def", false);
-            xhttp.send();
-            start_training();
-        }
-    </script>
-    <script>
-        var randomColorGenerator = function () {
-            return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
-        };
-
-        let data_chart = [1, 10, 5, 2, 20, 30, 45];
-        myData = {
-            labels: ["", "", "", "", "", "", ""],
-            datasets: [
-                {
-                    data: data_chart,
-                    backgroundColor: [randomColorGenerator(), randomColorGenerator(), randomColorGenerator(), randomColorGenerator(), randomColorGenerator(), randomColorGenerator(), randomColorGenerator()],
-                    scaleLineColor: 'transparent'
-                }]
-        };
-
-        // Default chart defined with type: 'line'
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: myData,
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            display: false
-                        },
-                        gridLines: {
-                            display: false,
-                        },
-                        display: false
-
-                    }],
-                    xAxes: [{
-                        gridLines: {
-                            display: false,
-
-                        },
-                        angleLines: {
-                            display: false
-                        },
-                        display: false
-                    }],
-                },
-                legend: {
-                    display: false,
-
-                }
-
-            }
-
-        });
-
-        // Function runs on chart type select update
-
-
-        // Randomize data button function
-        function randomizeData() {
-            let newdata_chart = data_chart.map(x => Math.floor(Math.random() * 50));
-
-            myData.datasets[0].data = newdata_chart
-            myChart.update();
-        };
-
-
-    </script>
-    <script>
-
-    </script>
-{% endblock %}
 </body>
 </html>

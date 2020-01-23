@@ -59,14 +59,14 @@ def get_plots():
     # ONLY FEATURES
 
     # Instantiate the visualizer
-    plt.figure(figsize=(5, 5))
+    plt.figure(figsize=(3.5, 3.5))
     viz = Manifold(manifold="tsne")
     # Fit the data to the visualizer
     viz.fit_transform(X_train, y_train)
     # save to html
     fig = plt.gcf()
     some_htmL = mpld3.fig_to_html(fig)
-    all_plots.append("<p>Manifold Visualization</p>" + some_htmL)
+    all_plots.append("<h4 align='center'>Manifold Visualization</h4>" + some_htmL)
     # clear plot
     plt.clf()
 
@@ -83,7 +83,7 @@ def get_plots():
         # save to html
         fig = plt.gcf()
         some_htmL = mpld3.fig_to_html(fig)
-        all_plots.append("<p>Class Prediction Error</p>" + some_htmL)
+        all_plots.append("<h4 align='center'>Class Prediction Error</h4>" + some_htmL)
         # clear plot
         plt.clf()
 
@@ -97,7 +97,7 @@ def get_plots():
         # save to html
         fig = plt.gcf()
         some_htmL = mpld3.fig_to_html(fig)
-        all_plots.append("<p>Confusion Matrix</p>" + some_htmL)
+        all_plots.append("<h4 align='center'>Confusion Matrix</h4>" + some_htmL)
         # clear plot
         plt.clf()
 
@@ -113,7 +113,7 @@ def get_plots():
         # save to html
         fig = plt.gcf()
         some_htmL = mpld3.fig_to_html(fig)
-        all_plots.append("<p>Prediction Error Plot</p>" + some_htmL)
+        all_plots.append("<h4 align='center'>Prediction Error Plot</h4>" + some_htmL)
         # clear plot
         plt.clf()
 
@@ -124,7 +124,7 @@ def get_plots():
         # save to html
         fig = plt.gcf()
         some_htmL = mpld3.fig_to_html(fig)
-        all_plots.append("<p>Residuals Plot</p>" + some_htmL)
+        all_plots.append("<h4 align='center'>Residuals Plot</h4>" + some_htmL)
         # clear plot
         plt.clf()
 
