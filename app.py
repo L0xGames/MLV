@@ -360,7 +360,6 @@ def defining():
             # preprocess
             X_train, X_test, y_train, y_test = train_test_split(dataframe.drop(dataframe.columns[-1], axis=1),
                                                                 dataframe.iloc[:, -1], random_state=42)
-            Enc = LabelEncoder()
             y_train = Enc.fit_transform(y_train)
             y_test = Enc.fit_transform(y_test)
             return make_response("finished", 200)
