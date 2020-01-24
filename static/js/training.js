@@ -10,14 +10,13 @@
 
         function drop(id) {
             const mlbtn = document.getElementById("dropdownMenuButton");
-            const selectedbtn = document.getElementById(id);
+            let selectedbtn = document.getElementById(id);
             mlbtn.firstChild.data = selectedbtn.firstChild.data;
             $(selectedbtn).removeClass("card").addClass("card bg-primary text-white ");
 
             var xhttp = new XMLHttpRequest();
             xhttp.open("POST", "http://127.0.0.1:5000/api/mlalg", true);
             xhttp.send(id);
-
         }
 
         $("#model_finised").hide();
@@ -82,7 +81,6 @@
                         document.getElementById("descrprogress").innerHTML = "Any R squared value greater than zero means that the regression analysis did better than just using a horizontal line through the mean value."
                     }
                 }).catch(error => {
-                console.log(error.response)
                 alert("Error Strings not supported in Csv");
                 pauseTimer();
                 $("#model_trains").hide(400);

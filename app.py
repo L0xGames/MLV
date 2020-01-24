@@ -72,34 +72,41 @@ def get_plots():
 
     if ML_ALG_nr == 1:
         # classification
-        classes = list(Enc.inverse_transform(model_def.classes_))
 
-        # Instantiate the classification model and visualizer
-        visualizer = ClassPredictionError(DecisionTreeClassifier(), classes=classes)
-        # Fit the training data to the visualizer
-        visualizer.fit(X_train, y_train)
-        # Evaluate the model on the test data
-        visualizer.score(X_test, y_test)
-        # save to html
-        fig = plt.gcf()
-        some_htmL = mpld3.fig_to_html(fig)
-        all_plots.append("<h4 align='center'>Class Prediction Error</h4>" + some_htmL)
-        # clear plot
-        plt.clf()
+        #Check if we can get the classes (sometimes we cant because new labels come in)
+        classes=None
+        try:
+            classes = list(Enc.inverse_transform(model_def.classes_))
+        except ValueError as e:
+            app.logger.info(e)
 
-        # The ConfusionMatrix visualizer taxes a model
-        cm = ConfusionMatrix(model_def, classes=classes)
-        # Fit fits the passed model. This is unnecessary if you pass the visualizer a pre-fitted model
-        cm.fit(X_train, y_train)
-        # To create the ConfusionMatrix, we need some test data. Score runs predict() on the data
-        # and then creates the confusion_matrix from scikit-learn.
-        cm.score(X_test, y_test)
-        # save to html
-        fig = plt.gcf()
-        some_htmL = mpld3.fig_to_html(fig)
-        all_plots.append("<h4 align='center'>Confusion Matrix</h4>" + some_htmL)
-        # clear plot
-        plt.clf()
+        if classes is not None:
+            # Instantiate the classification model and visualizer
+            visualizer = ClassPredictionError(DecisionTreeClassifier(), classes=classes)
+            # Fit the training data to the visualizer
+            visualizer.fit(X_train, y_train)
+            # Evaluate the model on the test data
+            visualizer.score(X_test, y_test)
+            # save to html
+            fig = plt.gcf()
+            some_htmL = mpld3.fig_to_html(fig)
+            all_plots.append("<h4 align='center'>Class Prediction Error</h4>" + some_htmL)
+            # clear plot
+            plt.clf()
+            # The ConfusionMatrix visualizer taxes a model
+            cm = ConfusionMatrix(model_def, classes=classes)
+            cm = ConfusionMatrix(model_def, classes=classes)
+            # Fit fits the passed model. This is unnecessary if you pass the visualizer a pre-fitted model
+            cm.fit(X_train, y_train)
+            # To create the ConfusionMatrix, we need some test data. Score runs predict() on the data
+            # and then creates the confusion_matrix from scikit-learn.
+            cm.score(X_test, y_test)
+            # save to html
+            fig = plt.gcf()
+            some_htmL = mpld3.fig_to_html(fig)
+            all_plots.append("<h4 align='center'>Confusion Matrix</h4>" + some_htmL)
+            # clear plot
+            plt.clf()
 
         return all_plots
 
@@ -179,7 +186,8 @@ def training():
         start_train = time.time()
         try:
             model_def.fit(X_train, y_train)
-        except:
+        except ValueError as e:
+            app.logger.info(e)
             return make_response("Error", 404)
         stop_train = time.time()
         train_time = stop_train - start_train
