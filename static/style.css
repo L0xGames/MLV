@@ -1,102 +1,102 @@
-#Landing\ Page{
+#landing_page {
   text-align: center;
-  font-size:3em;
-
-
+  font-size: 6vh;
 }
 
-#Titel{
-  padding-top: 100px;
-
-}
-#Button_Landing_Page{
-  padding-top: 0px;
-
-
+#titel {
+  margin: auto;
+  padding-top: 10vh;
 }
 
-#Upload\ Data {
+#particles-js {
+  align-items: center;
+  width: 100%;
+  height: 40vh;
+  background: url("/static/blue-1.jpg");
+}
+
+#upload_data {
   text-align: center;
-  font-size: 3em;
-  padding-top: 200px;
+  font-size: 6vh;
+  padding-top: 30vh;
 }
 
-#Upload\ Code{
+#Upload_Code{
   text-align: center;
-  padding-top: 200px;
+ padding-top: 30vh;
 }
 #start_training{
-  font-size:3em;
+  font-size: 6vh;
 }
 
-#Training\ Data{
-  font-size:3em;
+#training_data{
+  font-size: 6vh;
   text-align: center;
-  padding-top: 100px;
+  padding-top: 10vh;
 }
 
-#Display\ Results{
+#Display_Results{
   text-align: center;
 
 }
 #p_complete_time{
-  font-size: 2em;
+  font-size: 3vh;
 }
 #p_training_time{
-  font-size: 2em;
+  font-size: 3vh;
 }
 #p_testing_time{
-  font-size: 2em;
+  font-size: 3vh;
 }
 #p_accuracy{
-  font-size: 2em;
+  font-size: 3vh;
 }
 #descrprogress{
-  font-size: 2em;
+  font-size: 3vh;
 }
 #p_accuracy2{
-  font-size: 2em;
+  font-size: 3vh;
 }
 #results{
-  font-size: 3em;
+  font-size: 6vh;
 }
 #pasteprogressbar{
-  padding-left: 100px;
-  padding-right: 100px;
+  padding-left: 10vh;
+  padding-right: 10vh;
 }
 
-#Training_Button{
-  padding-top: 50px;
-  font-size:3em;
+#training_button{
+  padding-top: 1vh;
+  font-size: 6vh;
   text-align: center;
 
 }
 
 #upload_code{
-  font-size:3em;
+  font-size: 6vh;
 }
 #model_select{
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 2vh;
+  padding-right: 2vh;
 }
 
 
 #table{
-  padding-top: 10px;
+  padding-top: 1vh;
 }
 #info{
-   padding-left: 8px;
-  padding-right: 8px;
+   padding-left: 1vh;
+  padding-right: 1vh;
 }
 
 #choose_model{
-  font-size:3em;
+  font-size: 6vh;
 }
 
 #code{
-  padding-top: 50px;
+  padding-top: 5vh;
   text-align: center;
-  font-size: 3em;
+  font-size: 6vh;
 }
 
 #button{
@@ -104,7 +104,7 @@
 }
 
 
-#Table_Button{
+#table_button{
 text-align: center;
 }
 
@@ -112,13 +112,13 @@ text-align: center;
   text-align: center;
 }
 #container{
-            height: 350px;
-            width: 650px;
- margin: 0 auto;
-        }
+  height: 50vh;
+  width: 92.85vh;
+  margin: 0 auto;
+}
 
 #show_results{
-  padding-top: 100px;
+  padding-top: 10vh;
 }
 
 #small {
@@ -126,22 +126,16 @@ text-align: center;
 }
 
 #time_results{
-  font-size: 0.7em;
+  font-size: 1.5vh;
 }
 
 #score_results{
-  font-size: 0.7em;
+  font-size: 1.5vh;
 
 }
 #bar_results{
-  font-size: 0.7em;
+  font-size: 1.5vh;
 
 }
 
-#particles-js {
-    width: 100%;
-    height: 300px;
-  background: url("/static/blue-1.jpg");
-
-}
 
