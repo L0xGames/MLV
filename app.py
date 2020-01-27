@@ -20,7 +20,6 @@ from yellowbrick.features import Manifold
 from yellowbrick.regressor import PredictionError, ResidualsPlot
 
 app = Flask(__name__)
-# TODO new secret key
 app.secret_key = 'super secret key'
 dataframe = None
 file_size = None
@@ -40,6 +39,7 @@ ML_ALG_nr = None
 Enc = None
 
 
+# seperate js and html parts from generated html
 def preprocess_html(html_list):
     all_htmls = []
     for html in html_list:
@@ -54,9 +54,10 @@ def preprocess_html(html_list):
     return all_htmls
 
 
+# Generate Plots with yellowbrick and mpld3
 def get_plots():
     all_plots = []
-    # ONLY FEATURES
+    # FEATURE Visualization
 
     # Instantiate the visualizer
     plt.figure(figsize=(3.5, 3.5))
@@ -73,8 +74,8 @@ def get_plots():
     if ML_ALG_nr == 1:
         # classification
 
-        #Check if we can get the classes (sometimes we cant because new labels come in)
-        classes=None
+        # Check if we can get the classes
+        classes = None
         try:
             classes = list(Enc.inverse_transform(model_def.classes_))
         except ValueError as e:
@@ -138,6 +139,7 @@ def get_plots():
         return all_plots
 
 
+# Helper function to get the first 5 rows from the dataframe
 def extcsv_helper():
     # get headers and put them in dicts
     dicts = [dict(), dict(), dict(), dict(), dict()]
@@ -152,37 +154,42 @@ def extcsv_helper():
     return dicts
 
 
+# Parse code from file and get func names
 def parse_code():
     # Spezifikation Code: Der Code enthält 2 Funktionen: Einer zum preprocessen und der andere zur Modeldefinition
     # Die Reihenfolge ist: 1.testsplit 2.Modeldef
     # Dies ist wichtig da wir hier die Funktionen mit Hilfe des ast auslesen und von der Reihenfolge ausgehen
     # Außerdem kriegen die Funktionen folgene Parameter: Test_split(dataframe) und Modeldef(X_train, X_test, y_train, y_test)
-    # Folgende Rückgabewerte gibts für die Fkt.: Test_split=>dataframe und Modeldef=>modeldef type
+    # Folgende Rückgabewerte gibts für die Fkt.: Test_split=>dataframe,Encoder und Modeldef=>modeldef,int: Klassifikationstyp
     file = open(file_pathf, 'r')
     funcs = []
     text = file.read()
     p = ast.parse(text)
+    # Create AST
     node = ast.NodeVisitor()
+    # GET funcs with AST
     for node in ast.walk(p):
         if isinstance(node, ast.FunctionDef):
             funcs.append(node.name)
     return funcs
 
 
+# simple helper function to get filename
 def parse_file_name():
     base = os.path.basename(file_pathf)
     os.path.splitext(base)
     return os.path.splitext(base)[0]
 
 
-# GET fitting model
+# Route to fit the model and send back the results (actual model training)
 @app.route('/api/training', methods=["GET"])
 def training():
     global y_pred
+    # Check if model_def and dataframe available
     if (model_def is not None) and (isinstance(dataframe, pd.DataFrame)):
         f1 = None
         ajax = {}
-        # training
+        # model fitting
         start_train = time.time()
         try:
             model_def.fit(X_train, y_train)
@@ -199,10 +206,11 @@ def training():
         # accuracy
         result = r2_score(y_test, y_pred)
         app.logger.info(result)
+        # if Classification alg: Add f1score
         if ML_ALG_nr == 1:
             f1 = f1_score(y_test, y_pred, average='weighted')
             app.logger.info(f1)
-        # get all plots
+        # get all plots for visualization
         htmls = get_plots()
         # preprocess htmls
         preprocessed_html = preprocess_html(htmls)
@@ -216,11 +224,11 @@ def training():
     return make_response("wo", 200)
 
 
+# Home ROUTE
 @app.route('/', methods=["GET", "POST"])
 def hello_world():
     global toggle
     toggle = False
-    app.logger.info(toggle)
     if request.method == "POST":
         app.logger.info(request.files)
         data_upload = None
@@ -286,7 +294,7 @@ def hello_world():
     return render_template('home.html')
 
 
-# GET basic csv info like filename,file size rows and cols
+# ROUTE GET basic csv info like filename,file size rows and cols
 @app.route('/api/csvinfo', methods=["GET"])
 def get_csvinfo():
     if not (isinstance(dataframe, pd.DataFrame)):
@@ -295,7 +303,7 @@ def get_csvinfo():
     return make_response(jsonify([file_name, file_size, rows, cols]), 200)
 
 
-# GET extended CSV infos: first 5 elements
+# ROUTE GET extended CSV infos: first 5 elements
 @app.route('/api/csvtable', methods=["GET"])
 def get_csvtable():
     if not (isinstance(dataframe, pd.DataFrame)):
@@ -304,7 +312,7 @@ def get_csvtable():
     return make_response(jsonify(result), 200)
 
 
-# POST:set the global toggle
+# ROUTE POST:set the global toggle for automatic/manual switch
 @app.route('/api/toggle', methods=['POST'])
 def toggle():
     js_string = str(request.data)
@@ -326,6 +334,7 @@ def algorithm():
     return make_response("worked", 200)
 
 
+# ROUTE to define model and preprocess data
 @app.route('/api/def', methods=['POST'])
 def defining():
     app.logger.info("start training")
@@ -360,7 +369,7 @@ def defining():
             # preprocess
             X_train, X_test, y_train, y_test = train_test_split(dataframe.drop(dataframe.columns[-1], axis=1),
                                                                 dataframe.iloc[:, -1], random_state=42)
-            Enc=LabelEncoder()
+            Enc = LabelEncoder()
             y_train = Enc.fit_transform(y_train)
             y_test = Enc.fit_transform(y_test)
             return make_response("finished", 200)
