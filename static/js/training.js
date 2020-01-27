@@ -1,4 +1,4 @@
-   function reset() {
+   function reset() { //Zurücksetzen der Animation / Anzeigen des Buttons für die Ergebnisse
             $("#model_finised").hide();
             $("#show_results").hide();
             $("#button_results").hide();
@@ -6,8 +6,9 @@
             $("#container").show();
 
 
-        }
 
+        }
+        // Auswahl der Trainingsart für ML
         function drop(id) {
             const mlbtn = document.getElementById("dropdownMenuButton");
             let selectedbtn = document.getElementById(id);
@@ -15,7 +16,7 @@
             $(selectedbtn).removeClass("card").addClass("card bg-primary text-white ");
 
             var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "http://127.0.0.1:5000/api/mlalg", true);
+            xhttp.open("POST", "http://127.0.0.1:5000/api/mlalg", true); // Senden der ausgewählten Trainingsart für ML
             xhttp.send(id);
         }
 
@@ -23,16 +24,16 @@
         $("#show_results").hide();
         $("#button_results").hide();
 
-        function start_training() {
+        function start_training() { // function for starting training process of the frontend
             window.setInterval(function () {
-                    randomizeData();
+                    randomizeData(); // Zufällige Werte für Animation in des Balkendiagramms
                 }
                 , 700);
 
             resetTimer();
-            startTimer();
+            startTimer(); //Starten des Timers
             axios
-                .get('http://127.0.0.1:5000/api/training')
+                .get('http://127.0.0.1:5000/api/training') // get data after training from backend
                 .then(function (response) {
                     pauseTimer();
                     $("#model_trains").hide(400);
@@ -40,6 +41,7 @@
                     $("#show_results").show(400);
                     $("#button_results").show(400);
                     $("#container").hide(400);
+                    // display diffrent results from training
                     document.getElementById("p_training_time").innerHTML = "Training Time: " + (response.data.train_time).toFixed(5) + " s";
                     document.getElementById("p_testing_time").innerHTML = "Testing Time: " + (response.data.test_time).toFixed(5) + " s";
                     document.getElementById("p_complete_time").innerHTML = "Overall Time: " + timerDisplay.innerHTML;
@@ -51,6 +53,7 @@
                         document.getElementById("p_accuracy2").innerHTML = "F1 SCORE: No Score, because of Regression";
                     }
                     // display and evaluate js,html
+                    // Plots von mpld3
                     document.getElementById("plot1").innerHTML = response.data.htmls[0].html;
                     eval(response.data.htmls[0].js);
                     document.getElementById("plot2").innerHTML = response.data.htmls[1].html;
@@ -59,6 +62,7 @@
                     eval(response.data.htmls[2].js);
 
 
+                    //display progressbar with evaluation of r2 score
                     let r2 = parseFloat(response.data.result);
                     if (r2 < 0) {
                         document.getElementById("pasteprogressbar").innerHTML = "<div class=\"progress\">\n" +
@@ -93,7 +97,7 @@
 
         function define_start() {
             var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", "http://127.0.0.1:5000/api/def", false);
+            xhttp.open("POST", "http://127.0.0.1:5000/api/def", false);  // api post request for starting training in backend
             xhttp.send();
             start_training();
         }

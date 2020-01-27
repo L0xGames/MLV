@@ -1,3 +1,4 @@
+// upload button for csv
 const realBtn = document.getElementById("real-file");
 const customCSVBtn = document.getElementById("custom-csvbtn");
 const customCodeBtn = document.getElementById("custom-codebtn");

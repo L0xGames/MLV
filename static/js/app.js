@@ -1,4 +1,4 @@
-particlesJS('particles-js',{
+particlesJS('particles-js',{  // particleJS function more infos on https://github.com/VincentGarreau/particles.js/
   "particles": {
     "number": {
       "value": 80,

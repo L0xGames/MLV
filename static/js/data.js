@@ -1,3 +1,4 @@
+// VUE.components für Darstellung von CSV-Daten mit BootstrapVue
 Vue.component('app-user', {
     data: function () {
         return {
@@ -77,6 +78,7 @@ Vue.component('app-user', {
         };
 
     },
+    // table for displaying data from csv
     template: '<div>' +
         '<b-table responsive="true" head-variant="dark" no-border-collapse="true" bordered="true"  :items="items"></b-table>' +
         '</div>'
@@ -101,7 +103,7 @@ Vue.component('app-user', {
             }
             var self = this;
             axios
-                .get('http://127.0.0.1:5000/api/csvtable')
+                .get('http://127.0.0.1:5000/api/csvtable') // API request for csv data
                 .then(function (response) {
                     self.items = response.data
                 }).catch(error => console.log(error));
@@ -122,6 +124,7 @@ Vue.component('infocard', {
         }
     },
     delimiters: ['${', '}'],
+    // card for displaying metadata
     template: '<div>' +
         '<div class="card-deck">' +
         ' <b-card ' +
@@ -169,7 +172,7 @@ Vue.component('infocard', {
             }
             var self = this;
             axios
-                .get('http://127.0.0.1:5000/api/csvinfo')
+                .get('http://127.0.0.1:5000/api/csvinfo') // API request csv metadata
                 .then(function (response) {
                     self.data.CSVSIZE = response.data[1];
                     self.data.NAME = response.data[0];

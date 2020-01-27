@@ -50,17 +50,17 @@ im Filebrowser ausgewählt wurde, ändert sich der "value" von dem tatsächliche
 durch einen simulierten Klick auf den Submit button in den uploads Ordner schicken kann, was in app.py geschieht-->
 
 
-    <div id="fullPage">
-        <div class="section" id="landing_page">
+    <div id="fullPage"> <!-- fullpage.js Struktur für die verschieden Seiten -->
+        <div class="section" id="landing_page"> <!-- landing page -->
             <div id="titel">Machine Learning Visualization</div>
             <div id="particles-js" id="background"></div>
             <div id="button_landing_page">
                 <p>Start Process</p>
                 <a href="#section2"><img class="Button"
-                                         src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
+                                         src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a> <!-- button for next page -->
             </div>
         </div>
-        <div class="section">
+        <div class="section"> <!-- side for uploading csv -->
             <!-- MESSAGE SEC FAILED for CSV FILE UPLOAD-->
             <div class="=container">
                 {% with errors = get_flashed_messages(category_filter=["errorfileformatcsv"]) %}
@@ -92,27 +92,27 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 <form method="post" enctype="multipart/form-data">
                     <input type="file" name="data_upload" id="real-file" hidden="hidden"/>
                     <input type="submit" id="sub-file" hidden="hidden"/>
-                    <button type="button" class="btn btn-primary" id="custom-csvbtn">Upload CSV</button>
+                    <button type="button" class="btn btn-primary " id="custom-csvbtn">Upload CSV</button>
                 </form>
                 <p>Look at your Data</p>
                 <a href="#section3"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"
-                ></a>
+                ></a> <!-- button for next page  -->
             </div>
         </div>
-        <div class="section">
+        <div class="section"> <!-- page for displaying csv data and metadat -->
             <div id="info">
                 <div id="app">
-                    <app-user id="table"></app-user>
-                    <infocard id="info"></infocard>
+                    <app-user id="table"></app-user> <!-- implement table with csv data with VUE - components  -->
+                    <infocard id="info"></infocard> <!-- implement info cards with metadata with VUE - components  -->
                 </div>
             </div>
             <div id="code">Upload Code</div>
             <div id="button">
                 <a href="#section4"><img class="Button" src="https://img.icons8.com/color/48/000000/expand-arrow.png"
-                                         id="table_button"></a>
+                                         id="table_button"></a> <!-- button for next page -->
             </div>
         </div>
-        <div class="section" id="code_upload_section">
+        <div class="section" id="code_upload_section"> <!-- site for selecting methode or uploading own code -->
             <!-- Dropdown menu-->
             <div class="dropdown" hidden="hidden">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -165,37 +165,37 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 <form method="post" enctype="multipart/form-data">
                     <input type="file" name="code_upload" id="real-file2" hidden="hidden"/>
                     <input type="submit" id="sub-file2" hidden="hidden"/>
-                    <button type="button" class="btn btn-primary" id="custom-codebtn">Upload Code</button>
+                    <button type="button" class="btn btn-primary " id="custom-codebtn">Upload Code</button>
                 </form>
                 <div id="model_select">
                     <div class="card-deck">
                         <div class="card" onclick="drop(id)" id="0">
                             <div class="card-body">
-                                <h5 class="card-title">Support Vector Machine</h5>
+                                <p class="card-title">Support Vector Machine</p>
                                 <a href="#" class="stretched-link"></a>
                             </div>
                         </div>
                         <div class="card" onclick="drop(id)" id="1">
                             <div class="card-body">
-                                <h5 class="card-title">Lineare Regression</h5>
+                                <p class="card-title">Lineare Regression</p>
                                 <a href="#" class="stretched-link"></a>
                             </div>
                         </div>
                         <div class="card" onclick="drop(id)" id="2">
                             <div class="card-body">
-                                <h5 class="card-title">Neural network</h5>
+                                <p class="card-title">Neural network</p>
                                 <a href="#" class="stretched-link"></a>
                             </div>
                         </div>
                         <div class="card" onclick="drop(id)" id="3">
                             <div class="card-body">
-                                <h5 class="card-title">Decision tree</h5>
+                                <p class="card-title">Decision tree</p>
                                 <a href="#" class="stretched-link"></a>
                             </div>
                         </div>
                         <div class="card" onclick="drop(id)" id="4">
                             <div class="card-body">
-                                <h5 class="card-title">Random Forest</h5>
+                                <p class="card-title">Random Forest</p>
                                 <a href="#" class="stretched-link"></a>
                             </div>
                         </div>
@@ -207,11 +207,11 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                     <p>Start Training</p>
                     <a href="#section5"><img class="Button" onclick="define_start()"
                                              src="https://img.icons8.com/color/48/000000/expand-arrow.png"
-                    ></a>
+                    ></a> <!-- button for start training in backend and switch to next page -->
                 </div>
             </div>
         </div>
-        <div class="section" id="training_data">
+        <div class="section" id="training_data"> <!-- site for displaying animation while training is running -->
             <p id="model_trains">Your model is training</p>
             <div id="container">
                 <canvas id="myChart"></canvas>
@@ -233,13 +233,11 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                 <p id="show_results">Look at the results</p>
                 <div id>
                     <a href="#section6"><img class="Button"
-                                             src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a>
+                                             src="https://img.icons8.com/color/48/000000/expand-arrow.png"></a> <!-- button for next page -->
                 </div>
             </div>
         </div>
-        <div class="section" id="Display_Results">
-
-
+        <div class="section" id="Display_Results"> <!-- site of results-->
             <div class="container">
                 <div class="row">
                     <div class="col-sm-4"></div>
@@ -251,13 +249,13 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
                             <button type="button" class="btn btn-primary" onclick="reset()">Diffrent Model</button>
                         </a></div>
                     <div class="col-sm-4">
-                        <div id="plot1" align="right"></div>
+                        <div id="plot1" align="right"></div> <!-- display plot from mpld3 libary-->
                     </div>
                     <div class="col-sm-4">
-                        <div id="plot3" align="center"></div>
+                        <div id="plot3" align="center"></div> <!-- display plot from mpld3 libary-->
                     </div>
                     <div class="col-sm-4">
-                        <div id="plot2" align="right"></div>
+                        <div id="plot2" align="right"></div> <!-- display plot from mpld3 libary-->
                     </div>
                 </div>
                 <div class="row">
@@ -317,9 +315,9 @@ durch einen simulierten Klick auf den Submit button in den uploads Ordner schick
 
 
 
-    <!-- Toggle communication with Flask by ajax-->
 
 
+    <!-- linking js code -->
     <script type="text/javascript" src="/static/js/particles.js"></script>
     <script type="text/javascript" src="/static/js/app.js"></script>
     <script type="text/javascript" src="/static/js/data.js"></script>

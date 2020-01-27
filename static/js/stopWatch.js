@@ -1,3 +1,4 @@
+// Code for Timer
 var startTimerButton = document.querySelector('.startTimer');
 var pauseTimerButton = document.querySelector('.pauseTimer');
 var timerDisplay = document.querySelector('.timer');

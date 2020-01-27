@@ -1,6 +1,8 @@
+// randomize Color
 var randomColorGenerator = function () {
     return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
 };
+
 
 let data_chart = [1, 10, 5, 2, 20, 30, 45];
 myData = {
@@ -12,8 +14,7 @@ myData = {
             scaleLineColor: 'transparent'
         }]
 };
-
-// Default chart defined with type: 'line'
+// diagram with chart.js for animation while training is running
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
@@ -50,10 +51,10 @@ var myChart = new Chart(ctx, {
 
 });
 
-// Function runs on chart type select update
 
 
-// Randomize data button function
+
+// Randomize data
 function randomizeData() {
     let newdata_chart = data_chart.map(x => Math.floor(Math.random() * 50));
 
