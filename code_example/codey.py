@@ -21,7 +21,7 @@ def pre_process(df):
 def create_model(X_train, X_test, y_train, y_test):
     # ANALYTICAL MODELING
     pipe = Pipeline([
-        ('feature_selection', SelectFromModel(LinearSVC(max_iter=1000000))),
+        ('feature_selection', SelectFromModel(LinearSVC(max_iter=10000))),
         ('prediction', LinearRegression())
     ])
     # pipe=model_def = SVC(kernel='linear')
